@@ -34,10 +34,10 @@
           class="container-fluid d-flex justify-content-between w-100"
           style="padding: 0"
         >
-          <div class="d-flex flex-row" style="gap: 40px">
+          <div class="d-flex flex-row align-items-center" style="gap: 40px">
             <a
               class="navbar-brand"
-              href="#"
+              href="index.html"
               style="margin-right: 0; padding: 0"
             >
               <img
@@ -57,93 +57,95 @@
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-flex" id="navbarNav">
-              <ul class="navbar-nav d-flex" style="gap: 40px">
+              <ul
+                class="navbar-nav d-flex align-items-center"
+                style="gap: 40px"
+              >
                 <li class="nav-item">
                   <a
                     class="nav-link active"
-                    href="#"
+                    href="index.html"
                     style="
                       color: white !important;
                       font-weight: bold;
                       padding: 0;
                     "
+                    >Home</a
                   >
-                    Home
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="#"
-                    style="
-                      color: #6c757d !important;
-                      font-weight: 400;
-                      padding: 0;
-                    "
-                  >
-                    Lojas
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="#"
-                    style="
-                      color: #6c757d !important;
-                      font-weight: 400;
-                      padding: 0;
-                    "
-                  >
-                    Novidades
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    href="#"
-                    style="
-                      color: #6c757d !important;
-                      font-weight: 400;
-                      padding: 0;
-                    "
-                  >
-                    Promoções
-                  </a>
                 </li>
               </ul>
             </div>
           </div>
-          <form class="d-flex align-items-center">
-            <input
-              class="form-control me-2 fw-normal"
-              type="search"
-              placeholder="Digite o Produto"
-              aria-label="Search"
-              style="
-                padding: 0 0 0 15px;
-                font-size: 15px;
-                height: 38px;
-                width: 207px;
-                border-radius: 0;
-                align-items: center;
-              "
-            />
-            <button
-              class="btn btn-outline-light"
-              style="
-                padding: 9px 12px;
-                width: 80px;
-                height: 37px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 0;
-              "
-              type="submit"
+          <div class="d-flex align-items-center" style="gap: 20px">
+            <form class="d-flex align-items-center">
+              <input
+                class="form-control me-2 fw-normal"
+                type="search"
+                placeholder="Digite o Produto"
+                aria-label="Search"
+                style="
+                  padding: 0 0 0 15px;
+                  font-size: 15px;
+                  height: 38px;
+                  width: 207px;
+                  border-radius: 0;
+                "
+              />
+              <button
+                class="btn btn-outline-light"
+                style="
+                  padding: 9px 12px;
+                  width: 80px;
+                  height: 37px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border-radius: 0;
+                "
+                type="submit"
+              >
+                Buscar
+              </button>
+            </form>
+
+            <!-- Ícone do Carrinho -->
+            <a
+              href="carrinho.html"
+              class="text-white text-decoration-none position-relative"
             >
-              Buscar
-            </button>
-          </form>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
+                ></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span
+                id="carrinho-count"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style="display: none"
+                >0</span
+              >
+            </a>
+
+            <!-- Botão de Login/Usuário -->
+            <div id="auth-buttons">
+              <button
+                class="btn btn-outline-light"
+                onclick="abrirModalLogin()"
+                style="border-radius: 0"
+              >
+                Login
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
@@ -222,6 +224,8 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
+
+    <!-- Seção Categorias (Dinâmica) -->
     <section class="d-flex flex-column" style="gap: 32px">
       <h1
         class="fw-medium text-center"
@@ -229,309 +233,31 @@
       >
         Busque por categoria:
       </h1>
-      <div class="d-flex flex-wrap justify-content-center" style="gap: 30px">
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/camisa.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/bolsa.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/calçados.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/calça.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/casacos.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
-        <button class="border border-0 bg-transparent p-0">
-          <a href="#"
-            ><img
-              src="/src/assets/images/óculos.webp"
-              alt="Peça de Roupa"
-              style="width: 160px; height: 192px"
-          /></a>
-        </button>
+      <div
+        class="d-flex flex-wrap justify-content-center"
+        style="gap: 30px"
+        id="categorias-container"
+      >
+        <!-- Categorias serão carregadas via JavaScript -->
+        <div class="text-center">Carregando categorias...</div>
       </div>
     </section>
+
+    <!-- Seção Produtos (Dinâmica) -->
     <section
       class="d-flex flex-column flex-wrap align-items-center"
       style="margin-top: 48px; gap: 30px"
     >
       <h2 class="fw-medium">Produtos que estão bombando!</h2>
-      <div class="d-flex justify-content-center" style="gap: 30px">
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/Camiseta.webp"
-            alt="Modelo com Camiseta"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Camiseta Conforto
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Multicores e tamanhos. Tecido de algodão 100%, <br />
-              fresquinho para o verão. Modelagem unissex.
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 70,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
-          </div>
-        </div>
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/calça -vendas.webp"
-            alt="Modelo com Calça"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Calça Alfaiataria
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Modelo Wide Leg alfaiataria em linho. Uma peça <br />
-              pra vida toda!
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 180,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
-          </div>
-        </div>
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/tenis.webp"
-            alt="Modelo com Calça"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Tênis Chunky
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Snicker casual com solado mais alto e <br />
-              modelagem robusta. Modelo unissex.
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 250,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex justify-content-center" style="gap: 30px">
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/Jaqueta - modelo.webp"
-            alt="Modelo com Jaqueta"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Jaqueta Jeans
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Modelo unissex oversized com gola de camurça. <br />
-              Atemporal e autêntica!
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 150,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
-          </div>
-        </div>
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/óculos-modelo.webp"
-            alt="Modelo com óculos"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Óculos Redondo
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Armação metálica em grafite com lentes <br />
-              arredondadas. Sem erro!
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 120,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
-          </div>
-        </div>
-        <div class="border border-top-0 d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/images/Bolsa - modelo.webp"
-            alt="Modelo com Bolsa"
-            style="width: 380px; width: 408px"
-          />
-          <div class="" style="padding: 13px 16px">
-            <h6
-              class="fw-bold"
-              style="
-                font-size: 16px;
-                justify-content: flex-start;
-                align-items: center;
-                margin-bottom: 13px;
-              "
-            >
-              Bolsa coringa
-            </h6>
-            <p
-              class="fw-normal"
-              style="font-size: 16px"
-              style="margin-bottom: 16px"
-            >
-              Bolsa camel em couro sintético de alta duração. <br />
-              Ideal para acompanhar você por uma vida!.
-            </p>
-            <p class="fw-bold" style="font-size: 16px; margin-bottom: 10px">
-              R$ 120,00
-            </p>
-            <button
-              style="padding: 9px 16px; border: 0; background-color: blueviolet"
-            >
-              <a
-                href="#"
-                class="fw-medium text-white"
-                style="font-size: 16px; text-decoration: none"
-                >Ver Mais</a
-              >
-            </button>
+
+      <div class="container">
+        <div class="row g-4" id="produtos-container">
+          <!-- Produtos serão carregados via JavaScript -->
+          <div class="col-12 text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Carregando produtos...</span>
+            </div>
+            <p class="mt-2">Carregando produtos...</p>
           </div>
         </div>
       </div>
@@ -660,9 +386,140 @@
       style="padding: 17px 509px"
     >
       <p class="fw-normal text-white" style="font-size: 13px; margin: 0">
-        2023 © Desenvolvido por Alura | Projeto fictício sem fins comerciais.
+        2023 | Projeto fictício sem fins comerciais.
       </p>
     </footer>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="modalLogin" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formLogin">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Entrar
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarCadastro()"
+                >Não tem conta? Cadastre-se</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Criar Conta</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formCadastro">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroNome" class="form-label">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroNome"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroSobrenome" class="form-label"
+                    >Sobrenome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroSobrenome"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="cadastroEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="cadastroEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroSenha"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroConfirmarSenha" class="form-label"
+                  >Confirmar Senha</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroConfirmarSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Criar Conta
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarLogin()">Já tem conta? Faça login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       crossorigin="anonymous"
@@ -671,6 +528,218 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       crossorigin="anonymous"
     ></script>
-    <script src="/src/scripts/script.js"></script>
+
+    <script>
+      // Carousel e navegação
+      var myCarousel = document.querySelector("#carouselExampleIndicators");
+      var carousel = new bootstrap.Carousel(myCarousel, {
+        interval: 2000,
+        ride: "carousel",
+      });
+
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function () {
+          document.querySelectorAll(".nav-link").forEach((el) => {
+            el.style.color = "#6C757D";
+            el.style.fontWeight = "400";
+          });
+
+          this.style.color = "white";
+          this.style.fontWeight = "bold";
+        });
+      });
+
+      // Mapeamento de categorias para imagens
+      const categoriaImagens = {
+        Camisetas: "/src/assets/images/camisa.webp",
+        Bolsas: "/src/assets/images/bolsa.webp",
+        Calçados: "/src/assets/images/calçados.webp",
+        Calças: "/src/assets/images/calça.webp",
+        Casacos: "/src/assets/images/casacos.webp",
+        Óculos: "/src/assets/images/óculos.webp",
+      };
+
+      // Carregar categorias
+      async function carregarCategorias() {
+        try {
+          console.log("Carregando categorias...");
+          const response = await fetch(
+            "http://localhost:8000/api/categorias.php"
+          );
+
+          if (!response.ok) {
+            throw new Error("API não respondeu");
+          }
+
+          const data = await response.json();
+
+          // Se tiver erro, usar dados mock
+          if (data.error || !Array.isArray(data)) {
+            console.log("Usando dados mock para categorias");
+            renderizarCategorias(dadosMockCategorias);
+            return;
+          }
+
+          renderizarCategorias(data);
+        } catch (error) {
+          console.error("Erro ao carregar categorias:", error);
+          document.getElementById("categorias-container").innerHTML =
+            '<div class="text-center text-danger">Erro ao carregar categorias</div>';
+        }
+      }
+
+      // Carregar produtos
+      async function carregarProdutos() {
+        try {
+          console.log("Carregando produtos...");
+          const response = await fetch(
+            "http://localhost:8000/api/produtos.php"
+          );
+
+          if (!response.ok) {
+            throw new Error("API não respondeu");
+          }
+
+          const data = await response.json();
+
+          // Se tiver erro, usar dados mock
+          if (data.error || !Array.isArray(data)) {
+            console.log("Usando dados mock para produtos");
+            renderizarProdutos(dadosMockProdutos);
+            return;
+          }
+
+          renderizarProdutos(data);
+        } catch (error) {
+          console.error("Erro ao carregar produtos:", error);
+          document.getElementById("produtos-container").innerHTML =
+            '<div class="col-12 text-center text-danger">Erro ao carregar produtos</div>';
+        }
+      }
+
+      // Funções para renderizar
+      function renderizarCategorias(categorias) {
+        const containerCategorias = document.getElementById(
+          "categorias-container"
+        );
+        containerCategorias.innerHTML = "";
+
+        categorias.forEach((categoriaObj) => {
+          const categoria = categoriaObj.categoria;
+          const imagem =
+            categoriaImagens[categoria] ||
+            "/src/assets/images/placeholder.webp";
+
+          const button = document.createElement("button");
+          button.className = "border border-0 bg-transparent p-0";
+          button.innerHTML = `
+      <a href="categoria.html?categoria=${encodeURIComponent(categoria)}">
+        <img src="${imagem}" alt="${categoria}" style="width: 160px; height: 192px" />
+      </a>
+    `;
+
+          containerCategorias.appendChild(button);
+        });
+      }
+
+      function renderizarProdutos(produtos) {
+        const containerProdutos = document.getElementById("produtos-container");
+        containerProdutos.innerHTML = "";
+
+        produtos.forEach((produto) => {
+          const col = document.createElement("div");
+          col.className = "col-md-4 mb-4";
+
+          col.innerHTML = `
+        <div class="card h-100 border-0 shadow-sm">
+          <img 
+            src="${produto.imagem}" 
+            class="card-img-top" 
+            alt="${produto.nome}"
+            style="height: 300px; object-fit: cover;"
+            onerror="this.src='https://picsum.photos/400/300?random=${
+              produto.id_produto
+            }'"
+          >
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-bold">${produto.nome}</h5>
+            <p class="card-text text-muted flex-grow-1">
+              ${produto.descricao || "Produto de alta qualidade."}
+            </p>
+            <div class="mt-auto">
+              <p class="card-text fw-bold text-primary fs-5">
+                R$ ${parseFloat(produto.preco).toFixed(2).replace(".", ",")}
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary">${produto.categoria}</span>
+                <span class="badge bg-${
+                  produto.estoque > 0 ? "success" : "danger"
+                }">
+                  ${produto.estoque} em estoque
+                </span>
+              </div>
+         
+<button class="btn w-100 mt-2" style="background-color: blueviolet; border: none; color: white;" 
+        onclick="window.location.href='produto.html?id=${produto.id_produto}'">
+    Ver Detalhes
+</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+          containerProdutos.appendChild(col);
+        });
+      }
+
+      // Dados mock como fallback
+      const dadosMockCategorias = [
+        { categoria: "Camisetas" },
+        { categoria: "Bolsas" },
+        { categoria: "Calçados" },
+        { categoria: "Calças" },
+        { categoria: "Casacos" },
+        { categoria: "Óculos" },
+      ];
+
+      const dadosMockProdutos = [
+        {
+          id_produto: 1,
+          nome: "Camiseta Conforto",
+          preco: "70.00",
+          categoria: "Camisetas",
+          estoque: 50,
+          descricao:
+            "Multicores e tamanhos. Tecido de algodão 100%, fresquinho para o verão.",
+          imagem: "https://source.unsplash.com/featured/?tshirt",
+        },
+        {
+          id_produto: 2,
+          nome: "Calça Alfaiataria",
+          preco: "180.00",
+          categoria: "Calças",
+          estoque: 30,
+          descricao:
+            "Modelo Wide Leg alfaiataria em linho. Uma peça pra vida toda!",
+          imagem: "https://source.unsplash.com/featured/?pants",
+        },
+        {
+          id_produto: 3,
+          nome: "Tênis Chunky",
+          preco: "250.00",
+          categoria: "Calçados",
+          estoque: 25,
+          descricao: "Snicker casual com solado mais alto e modelagem robusta.",
+          imagem: "https://source.unsplash.com/featured/?sneakers",
+        },
+      ];
+
+      // Inicializar quando a página carregar
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarCategorias();
+        carregarProdutos();
+      });
+    </script>
+    <script src="/src/scripts/auth.js"></script>
   </body>
 </html>

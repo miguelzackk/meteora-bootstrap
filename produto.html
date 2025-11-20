@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Produto</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body style="font-family: 'Inter', sans-serif">
+    <!-- Header (igual às outras páginas) -->
+    <header
+      class="bg-black d-flex w-100 align-items-center"
+      style="height: 58px; padding: 0 23px"
+    >
+      <nav
+        class="navbar navbar-expand-lg bg-black"
+        style="
+          padding: 0;
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+        "
+      >
+        <div
+          class="container-fluid d-flex justify-content-between w-100"
+          style="padding: 0"
+        >
+          <div class="d-flex flex-row align-items-center" style="gap: 40px">
+            <a
+              class="navbar-brand"
+              href="index.html"
+              style="margin-right: 0; padding: 0"
+            >
+              <img
+                src="/src/assets/images/logo-desktop.webp"
+                alt="Logo Meteora"
+              />
+            </a>
+          </div>
+          <div class="d-flex align-items-center" style="gap: 20px">
+            <form class="d-flex align-items-center" id="searchForm">
+              <input
+                class="form-control me-2 fw-normal"
+                type="search"
+                placeholder="Digite o Produto"
+                aria-label="Search"
+                style="
+                  padding: 0 0 0 15px;
+                  font-size: 15px;
+                  height: 38px;
+                  width: 207px;
+                  border-radius: 0;
+                "
+              />
+              <button
+                class="btn btn-outline-light"
+                style="
+                  padding: 9px 12px;
+                  width: 80px;
+                  height: 37px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border-radius: 0;
+                "
+                type="submit"
+              >
+                Buscar
+              </button>
+            </form>
+
+            <!-- Ícone do Carrinho -->
+            <a
+              href="carrinho.html"
+              class="text-white text-decoration-none position-relative"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
+                ></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span
+                id="carrinho-count"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style="display: none"
+                >0</span
+              >
+            </a>
+
+            <!-- Botão de Login/Usuário -->
+            <div id="auth-buttons">
+              <button
+                class="btn btn-outline-light"
+                onclick="abrirModalLogin()"
+                style="border-radius: 0"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section class="container my-5">
+      <div class="row" id="produto-container">
+        <div class="col-12 text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando produto...</span>
+          </div>
+          <p class="mt-2">Carregando produto...</p>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="bg-black d-flex justify-content-center align-items-center mt-5"
+      style="padding: 17px"
+    >
+      <p class="fw-normal text-white" style="font-size: 13px; margin: 0">
+        2023 | Projeto fictício sem fins comerciais.
+      </p>
+    </footer>
+
+    <!-- Modals de Login/Cadastro (copie do index.html) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // Função para obter parâmetros da URL
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          id: params.get("id"),
+        };
+      }
+
+      // Carregar produto
+      async function carregarProduto() {
+        try {
+          const { id } = getUrlParams();
+
+          if (!id) {
+            document.getElementById("produto-container").innerHTML =
+              '<div class="col-12 text-center text-danger">Produto não especificado</div>';
+            return;
+          }
+
+          const response = await fetch(
+            `http://localhost:8000/api/produto.php?id=${id}`
+          );
+
+          if (!response.ok) {
+            throw new Error("API não respondeu");
+          }
+
+          const data = await response.json();
+
+          const container = document.getElementById("produto-container");
+
+          if (data.error || !data.id_produto) {
+            container.innerHTML =
+              '<div class="col-12 text-center text-danger">Produto não encontrado</div>';
+            return;
+          }
+
+          const produto = data;
+
+          container.innerHTML = `
+                    <div class="col-md-6">
+                        <img src="${
+                          produto.imagem
+                        }" class="img-fluid w-100" alt="${produto.nome}" 
+                             style="max-height: 600px; object-fit: cover;"
+                             onerror="this.src='https://picsum.photos/600/600?random=${
+                               produto.id_produto
+                             }'">
+                    </div>
+                    <div class="col-md-6">
+                        <h1 class="fw-bold">${produto.nome}</h1>
+                        <p class="text-muted fs-5">${produto.categoria}</p>
+                        <p class="fw-bold text-primary fs-2">R$ ${parseFloat(
+                          produto.preco
+                        )
+                          .toFixed(2)
+                          .replace(".", ",")}</p>
+                        
+                        <div class="mb-4">
+                            <p>${
+                              produto.descricao || "Produto de alta qualidade."
+                            }</p>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge ${
+                              produto.estoque > 0 ? "bg-success" : "bg-danger"
+                            } me-3">
+                                ${produto.estoque} em estoque
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-4">
+                            <label for="quantidade" class="form-label me-3 mb-0">Quantidade:</label>
+                            <input type="number" id="quantidade" class="form-control" style="width: 100px;" 
+                                   value="1" min="1" max="${produto.estoque}">
+                        </div>
+                        
+                        <button class="btn w-100 py-3" style="background-color: blueviolet; border: none; color: white; font-size: 1.2rem;"
+                                onclick="adicionarAoCarrinho(${
+                                  produto.id_produto
+                                })">
+                            Adicionar ao Carrinho
+                        </button>
+                        
+                        <div class="mt-4">
+                            <h5>Características:</h5>
+                            <ul>
+                                <li>Entrega grátis para compras acima de R$ 200</li>
+                                <li>Troca em até 30 dias</li>
+                                <li>Pagamento via PIX com 5% de desconto</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+        } catch (error) {
+          console.error("Erro ao carregar produto:", error);
+          document.getElementById("produto-container").innerHTML =
+            '<div class="col-12 text-center text-danger">Erro ao carregar produto</div>';
+        }
+      }
+
+      function adicionarAoCarrinho(idProduto) {
+        const quantidade = parseInt(
+          document.getElementById("quantidade").value
+        );
+
+        // Buscar dados diretamente da API para garantir que estão corretos
+        fetch(`http://localhost:8000/api/produto.php?id=${idProduto}`)
+          .then((response) => response.json())
+          .then((produto) => {
+            if (produto.error) {
+              alert("Erro ao carregar produto");
+              return;
+            }
+
+            // Usar dados diretamente da API
+            const produtoParaCarrinho = {
+              id_produto: produto.id_produto,
+              nome: produto.nome,
+              preco: parseFloat(produto.preco),
+              imagem: produto.imagem,
+              categoria: produto.categoria,
+              estoque: parseInt(produto.estoque),
+            };
+
+            console.log("Enviando para carrinho:", produtoParaCarrinho); // DEBUG
+
+            authManager.adicionarAoCarrinho(produtoParaCarrinho, quantidade);
+          })
+          .catch((error) => {
+            console.error("Erro:", error);
+            alert("Erro ao adicionar produto ao carrinho");
+          });
+      }
+
+      // Busca
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const termo = this.querySelector("input").value;
+          if (termo.trim()) {
+            window.location.href = `busca.html?q=${encodeURIComponent(termo)}`;
+          }
+        });
+
+      // Inicializar quando a página carregar
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarProduto();
+      });
+    </script>
+    <script src="/src/scripts/auth.js"></script>
+  </body>
+</html>

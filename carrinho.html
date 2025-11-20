@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrinho de Compras</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body style="font-family: 'Inter', sans-serif">
+    <header
+      class="bg-black d-flex w-100 align-items-center"
+      style="height: 58px; padding: 0 23px"
+    >
+      <!-- Header igual às outras páginas -->
+    </header>
+
+    <section class="container my-5">
+      <h1 class="text-center mb-5">Meu Carrinho</h1>
+
+      <div id="carrinho-vazio" class="text-center" style="display: none">
+        <h3 class="text-muted">Seu carrinho está vazio</h3>
+        <p>Adicione alguns produtos incríveis!</p>
+        <a
+          href="index.html"
+          class="btn"
+          style="background-color: blueviolet; color: white"
+          >Continuar Comprando</a
+        >
+      </div>
+
+      <div id="carrinho-itens">
+        <div class="row">
+          <div class="col-md-8">
+            <div id="lista-carrinho">
+              <!-- Itens serão carregados via JavaScript -->
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Resumo do Pedido</h5>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Subtotal:</span>
+                  <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Frete:</span>
+                  <span id="frete">Grátis</span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between mb-3">
+                  <strong>Total:</strong>
+                  <strong id="total">R$ 0,00</strong>
+                </div>
+                <button
+                  id="btn-finalizar"
+                  class="btn w-100"
+                  style="background-color: blueviolet; color: white"
+                  disabled
+                >
+                  Finalizar Compra
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      function carregarCarrinho() {
+        const carrinho = authManager.getCarrinho();
+        const listaCarrinho = document.getElementById("lista-carrinho");
+        const carrinhoVazio = document.getElementById("carrinho-vazio");
+        const carrinhoItens = document.getElementById("carrinho-itens");
+
+        console.log("Carrinho carregado:", carrinho); // DEBUG
+
+        if (!carrinho || carrinho.length === 0) {
+          carrinhoVazio.style.display = "block";
+          carrinhoItens.style.display = "none";
+          return;
+        }
+
+        carrinhoVazio.style.display = "none";
+        carrinhoItens.style.display = "block";
+        listaCarrinho.innerHTML = "";
+
+        carrinho.forEach((item) => {
+          // VALIDAÇÃO: garantir que todos os campos existem
+          const itemSeguro = {
+            id_produto: item.id_produto || 0,
+            nome: item.nome || "Produto sem nome",
+            preco: item.preco || 0,
+            imagem:
+              item.imagem ||
+              `https://picsum.photos/100/100?random=${item.id_produto || 1}`,
+            categoria: item.categoria || "Sem categoria",
+            estoque: item.estoque || 0,
+            quantidade: item.quantidade || 1,
+          };
+
+          const itemElement = document.createElement("div");
+          itemElement.className = "card mb-3";
+          itemElement.innerHTML = `
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                        <img src="${itemSeguro.imagem}" 
+                             class="img-fluid rounded" 
+                             alt="${itemSeguro.nome}"
+                             style="height: 80px; width: 80px; object-fit: cover;"
+                             onerror="this.src='https://picsum.photos/80/80?random=${
+                               itemSeguro.id_produto
+                             }'">
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-1">${itemSeguro.nome}</h6>
+                        <small class="text-muted">${
+                          itemSeguro.categoria
+                        }</small>
+                        <p class="mb-0 fw-bold text-primary">R$ ${itemSeguro.preco
+                          .toFixed(2)
+                          .replace(".", ",")}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Quantidade</label>
+                        <input type="number" 
+                               class="form-control form-control-sm" 
+                               value="${itemSeguro.quantidade}" 
+                               min="1" 
+                               max="${itemSeguro.estoque}"
+                               onchange="atualizarQuantidade(${
+                                 itemSeguro.id_produto
+                               }, this.value)">
+                    </div>
+                    <div class="col-md-2">
+                        <p class="mb-1 small">Subtotal</p>
+                        <p class="fw-bold">R$ ${(
+                          itemSeguro.preco * itemSeguro.quantidade
+                        )
+                          .toFixed(2)
+                          .replace(".", ",")}</p>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-danger btn-sm" 
+                                onclick="removerItem(${itemSeguro.id_produto})"
+                                title="Remover item">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+          listaCarrinho.appendChild(itemElement);
+        });
+
+        atualizarResumo();
+      }
+
+      function atualizarQuantidade(idProduto, quantidade) {
+        const quant = parseInt(quantidade);
+        if (isNaN(quant) || quant < 1) {
+          alert("Quantidade inválida");
+          carregarCarrinho(); // Recarregar para voltar ao valor anterior
+          return;
+        }
+
+        authManager.atualizarQuantidade(idProduto, quant);
+        carregarCarrinho();
+      }
+
+      function removerItem(idProduto) {
+        if (confirm("Tem certeza que deseja remover este item do carrinho?")) {
+          authManager.removerDoCarrinho(idProduto);
+          carregarCarrinho();
+        }
+      }
+
+      function atualizarResumo() {
+        const carrinho = authManager.getCarrinho();
+        let subtotal = 0;
+
+        carrinho.forEach((item) => {
+          subtotal += (item.preco || 0) * (item.quantidade || 0);
+        });
+
+        const frete = subtotal > 200 ? 0 : 15;
+        const total = subtotal + frete;
+
+        document.getElementById("subtotal").textContent = `R$ ${subtotal
+          .toFixed(2)
+          .replace(".", ",")}`;
+        document.getElementById("frete").textContent =
+          frete === 0 ? "Grátis" : `R$ ${frete.toFixed(2).replace(".", ",")}`;
+        document.getElementById("total").textContent = `R$ ${total
+          .toFixed(2)
+          .replace(".", ",")}`;
+
+        document.getElementById("btn-finalizar").disabled = subtotal === 0;
+      }
+
+      document
+        .getElementById("btn-finalizar")
+        .addEventListener("click", function () {
+          if (!authManager.usuarioLogado) {
+            alert("Faça login para finalizar a compra!");
+            authManager.abrirModalLogin();
+            return;
+          }
+
+          // Aqui você pode implementar a finalização da compra
+          alert("Compra finalizada com sucesso!");
+          authManager.carrinho = [];
+          authManager.salvarCarrinho();
+          authManager.atualizarContadorCarrinho();
+          carregarCarrinho();
+        });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarCarrinho();
+      });
+    </script>
+    <script src="/src/scripts/auth.js"></script>
+  </body>
+</html>
