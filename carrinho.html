@@ -39,9 +39,7 @@
       <div id="carrinho-itens">
         <div class="row">
           <div class="col-md-8">
-            <div id="lista-carrinho">
-              <!-- Itens serão carregados via JavaScript -->
-            </div>
+            <div id="lista-carrinho"></div>
           </div>
           <div class="col-md-4">
             <div class="card">
@@ -82,8 +80,6 @@
         const carrinhoVazio = document.getElementById("carrinho-vazio");
         const carrinhoItens = document.getElementById("carrinho-itens");
 
-        console.log("Carrinho carregado:", carrinho); // DEBUG
-
         if (!carrinho || carrinho.length === 0) {
           carrinhoVazio.style.display = "block";
           carrinhoItens.style.display = "none";
@@ -95,7 +91,6 @@
         listaCarrinho.innerHTML = "";
 
         carrinho.forEach((item) => {
-          // VALIDAÇÃO: garantir que todos os campos existem
           const itemSeguro = {
             id_produto: item.id_produto || 0,
             nome: item.nome || "Produto sem nome",
@@ -112,54 +107,40 @@
           itemElement.className = "card mb-3";
           itemElement.innerHTML = `
             <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-2">
-                        <img src="${itemSeguro.imagem}" 
-                             class="img-fluid rounded" 
-                             alt="${itemSeguro.nome}"
-                             style="height: 80px; width: 80px; object-fit: cover;"
-                             onerror="this.src='https://picsum.photos/80/80?random=${
-                               itemSeguro.id_produto
-                             }'">
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="mb-1">${itemSeguro.nome}</h6>
-                        <small class="text-muted">${
-                          itemSeguro.categoria
-                        }</small>
-                        <p class="mb-0 fw-bold text-primary">R$ ${itemSeguro.preco
-                          .toFixed(2)
-                          .replace(".", ",")}</p>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small mb-1">Quantidade</label>
-                        <input type="number" 
-                               class="form-control form-control-sm" 
-                               value="${itemSeguro.quantidade}" 
-                               min="1" 
-                               max="${itemSeguro.estoque}"
-                               onchange="atualizarQuantidade(${
-                                 itemSeguro.id_produto
-                               }, this.value)">
-                    </div>
-                    <div class="col-md-2">
-                        <p class="mb-1 small">Subtotal</p>
-                        <p class="fw-bold">R$ ${(
-                          itemSeguro.preco * itemSeguro.quantidade
-                        )
-                          .toFixed(2)
-                          .replace(".", ",")}</p>
-                    </div>
-                    <div class="col-md-1">
-                        <button class="btn btn-outline-danger btn-sm" 
-                                onclick="removerItem(${itemSeguro.id_produto})"
-                                title="Remover item">
-                            ×
-                        </button>
-                    </div>
+              <div class="row align-items-center">
+                <div class="col-md-2">
+                  <img src="${itemSeguro.imagem}" class="img-fluid rounded"
+                       alt="${itemSeguro.nome}"
+                       style="height: 80px; width: 80px; object-fit: cover;"
+                       onerror="this.src='https://picsum.photos/80/80?random=${itemSeguro.id_produto}'">
                 </div>
-            </div>
-        `;
+                <div class="col-md-4">
+                  <h6 class="mb-1">${itemSeguro.nome}</h6>
+                  <small class="text-muted">${itemSeguro.categoria}</small>
+                  <p class="mb-0 fw-bold text-primary">R$ ${itemSeguro.preco
+                    .toFixed(2)
+                    .replace(".", ",")}</p>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small mb-1">Quantidade</label>
+                  <input type="number" class="form-control form-control-sm"
+                         value="${itemSeguro.quantidade}" min="1" 
+                         max="${itemSeguro.estoque}"
+                         onchange="atualizarQuantidade(${itemSeguro.id_produto}, this.value)">
+                </div>
+                <div class="col-md-2">
+                  <p class="mb-1 small">Subtotal</p>
+                  <p class="fw-bold">R$ ${(itemSeguro.preco * itemSeguro.quantidade)
+                    .toFixed(2)
+                    .replace(".", ",")}</p>
+                </div>
+                <div class="col-md-1">
+                  <button class="btn btn-outline-danger btn-sm"
+                          onclick="removerItem(${itemSeguro.id_produto})"
+                          title="Remover item">×</button>
+                </div>
+              </div>
+            </div>`;
           listaCarrinho.appendChild(itemElement);
         });
 
@@ -170,7 +151,7 @@
         const quant = parseInt(quantidade);
         if (isNaN(quant) || quant < 1) {
           alert("Quantidade inválida");
-          carregarCarrinho(); // Recarregar para voltar ao valor anterior
+          carregarCarrinho();
           return;
         }
 
@@ -208,27 +189,55 @@
         document.getElementById("btn-finalizar").disabled = subtotal === 0;
       }
 
+      // 🟣 Função principal — finaliza a compra e chama o backend
       document
         .getElementById("btn-finalizar")
-        .addEventListener("click", function () {
+        .addEventListener("click", async function () {
           if (!authManager.usuarioLogado) {
             alert("Faça login para finalizar a compra!");
             authManager.abrirModalLogin();
             return;
           }
 
-          // Aqui você pode implementar a finalização da compra
-          alert("Compra finalizada com sucesso!");
-          authManager.carrinho = [];
-          authManager.salvarCarrinho();
-          authManager.atualizarContadorCarrinho();
-          carregarCarrinho();
+          const usuario = authManager.usuarioLogado;
+          const carrinho = authManager.getCarrinho();
+
+          if (!carrinho || carrinho.length === 0) {
+            alert("Seu carrinho está vazio!");
+            return;
+          }
+
+          try {
+            const response = await fetch("http://localhost:8000/api/finalizar-compra.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id_cliente: usuario.id_cliente,
+                itens: carrinho,
+              }),
+            });
+
+            const resultado = await response.json();
+            console.log("Resultado da compra:", resultado);
+
+            if (resultado.success) {
+              alert("Compra finalizada com sucesso!");
+              authManager.carrinho = [];
+              authManager.salvarCarrinho();
+              authManager.atualizarContadorCarrinho();
+              carregarCarrinho();
+            } else {
+              alert("Erro: " + (resultado.error || "Não foi possível concluir a compra"));
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Erro ao conectar ao servidor.");
+          }
         });
 
-      document.addEventListener("DOMContentLoaded", function () {
-        carregarCarrinho();
-      });
+      document.addEventListener("DOMContentLoaded", carregarCarrinho);
     </script>
+
     <script src="/src/scripts/auth.js"></script>
   </body>
 </html>

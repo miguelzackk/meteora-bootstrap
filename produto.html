@@ -228,12 +228,12 @@
                                    value="1" min="1" max="${produto.estoque}">
                         </div>
                         
-                        <button class="btn w-100 py-3" style="background-color: blueviolet; border: none; color: white; font-size: 1.2rem;"
-                                onclick="adicionarAoCarrinho(${
-                                  produto.id_produto
-                                })">
-                            Adicionar ao Carrinho
-                        </button>
+                 <button class="btn w-100 py-3"
+  style="background-color: blueviolet; border: none; color: white; font-size: 1.2rem;"
+  onclick="adicionarProdutoAoCarrinho(${produto.id_produto})">
+  Adicionar ao Carrinho
+</button>
+
                         
                         <div class="mt-4">
                             <h5>Características:</h5>
@@ -252,33 +252,20 @@
         }
       }
 
-      function adicionarAoCarrinho(idProduto) {
+      function adicionarProdutoAoCarrinho(idProduto) {
         const quantidade = parseInt(
           document.getElementById("quantidade").value
         );
 
-        // Buscar dados diretamente da API para garantir que estão corretos
         fetch(`http://localhost:8000/api/produto.php?id=${idProduto}`)
-          .then((response) => response.json())
+          .then((res) => res.json())
           .then((produto) => {
             if (produto.error) {
               alert("Erro ao carregar produto");
               return;
             }
 
-            // Usar dados diretamente da API
-            const produtoParaCarrinho = {
-              id_produto: produto.id_produto,
-              nome: produto.nome,
-              preco: parseFloat(produto.preco),
-              imagem: produto.imagem,
-              categoria: produto.categoria,
-              estoque: parseInt(produto.estoque),
-            };
-
-            console.log("Enviando para carrinho:", produtoParaCarrinho); // DEBUG
-
-            authManager.adicionarAoCarrinho(produtoParaCarrinho, quantidade);
+            authManager.adicionarAoCarrinho(produto, quantidade);
           })
           .catch((error) => {
             console.error("Erro:", error);
