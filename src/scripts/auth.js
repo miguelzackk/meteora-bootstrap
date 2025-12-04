@@ -517,7 +517,6 @@ function finalizarCompra() {
   return authManager.finalizarCompra();
 }
 
-s;
 document.addEventListener("DOMContentLoaded", function () {
   const formLogin = document.getElementById("formLogin");
   if (formLogin) {
