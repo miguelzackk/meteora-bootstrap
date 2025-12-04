@@ -112,7 +112,9 @@
                   <img src="${itemSeguro.imagem}" class="img-fluid rounded"
                        alt="${itemSeguro.nome}"
                        style="height: 80px; width: 80px; object-fit: cover;"
-                       onerror="this.src='https://picsum.photos/80/80?random=${itemSeguro.id_produto}'">
+                       onerror="this.src='https://picsum.photos/80/80?random=${
+                         itemSeguro.id_produto
+                       }'">
                 </div>
                 <div class="col-md-4">
                   <h6 class="mb-1">${itemSeguro.nome}</h6>
@@ -126,11 +128,15 @@
                   <input type="number" class="form-control form-control-sm"
                          value="${itemSeguro.quantidade}" min="1" 
                          max="${itemSeguro.estoque}"
-                         onchange="atualizarQuantidade(${itemSeguro.id_produto}, this.value)">
+                         onchange="atualizarQuantidade(${
+                           itemSeguro.id_produto
+                         }, this.value)">
                 </div>
                 <div class="col-md-2">
                   <p class="mb-1 small">Subtotal</p>
-                  <p class="fw-bold">R$ ${(itemSeguro.preco * itemSeguro.quantidade)
+                  <p class="fw-bold">R$ ${(
+                    itemSeguro.preco * itemSeguro.quantidade
+                  )
                     .toFixed(2)
                     .replace(".", ",")}</p>
                 </div>
@@ -190,9 +196,12 @@
       }
 
       // 🟣 Função principal — finaliza a compra e chama o backend
+      // Substitua a função de finalizar compra no arquivo carrinho.html
       document
         .getElementById("btn-finalizar")
         .addEventListener("click", async function () {
+          const btn = this;
+
           if (!authManager.usuarioLogado) {
             alert("Faça login para finalizar a compra!");
             authManager.abrirModalLogin();
@@ -202,36 +211,125 @@
           const usuario = authManager.usuarioLogado;
           const carrinho = authManager.getCarrinho();
 
+          console.log("Finalizando compra...", { usuario, carrinho });
+
           if (!carrinho || carrinho.length === 0) {
             alert("Seu carrinho está vazio!");
             return;
           }
 
+          // Verificar se todos os itens têm id_produto válido
+          const itensInvalidos = carrinho.filter(
+            (item) => !item.id_produto || item.id_produto <= 0
+          );
+          if (itensInvalidos.length > 0) {
+            console.error("Itens inválidos:", itensInvalidos);
+            alert(
+              "Alguns produtos no carrinho têm ID inválido. Por favor, remova-os e adicione novamente."
+            );
+            return;
+          }
+
           try {
-            const response = await fetch("https://backend-meteora-production.up.railway.app/finalizar-compra.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                id_cliente: usuario.id_cliente,
-                itens: carrinho,
-              }),
-            });
+            // Desabilitar botão e mostrar carregando
+            btn.disabled = true;
+            btn.innerHTML =
+              '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processando...';
+
+            const dadosCompra = {
+              id_cliente: usuario.id_cliente,
+              itens: carrinho.map((item) => ({
+                id_produto: item.id_produto,
+                nome: item.nome,
+                preco: parseFloat(item.preco),
+                quantidade: parseInt(item.quantidade),
+                imagem: item.imagem,
+                categoria: item.categoria,
+                estoque: item.estoque,
+              })),
+            };
+
+            console.log("Enviando dados para o servidor:", dadosCompra);
+
+            const response = await fetch(
+              "https://backend-meteora-production.up.railway.app/finalizar-compra.php",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify(dadosCompra),
+              }
+            );
+
+            // Verificar se a resposta é JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+              const text = await response.text();
+              console.error("Resposta não é JSON:", text);
+              throw new Error("Resposta do servidor inválida");
+            }
 
             const resultado = await response.json();
-            console.log("Resultado da compra:", resultado);
+            console.log("Resposta do servidor:", resultado);
 
             if (resultado.success) {
-              alert("Compra finalizada com sucesso!");
+              // Formatar valores para exibição
+              const valorFormatado = resultado.valor_total.toLocaleString(
+                "pt-BR",
+                {
+                  style: "currency",
+                  currency: "BRL",
+                }
+              );
+
+              alert(
+                `✅ Compra finalizada com sucesso!\n\nPedido: #${resultado.id_compra}\nValor Total: ${valorFormatado}\nItens: ${resultado.quantidade_itens}`
+              );
+
+              // Limpar carrinho
               authManager.carrinho = [];
               authManager.salvarCarrinho();
               authManager.atualizarContadorCarrinho();
               carregarCarrinho();
             } else {
-              alert("Erro: " + (resultado.error || "Não foi possível concluir a compra"));
+              // Tratar erro específico
+              let mensagemErro = "Não foi possível finalizar a compra.";
+
+              if (resultado.error) {
+                if (resultado.error.includes("estoque")) {
+                  mensagemErro =
+                    "Estoque insuficiente para um ou mais produtos.";
+                } else if (resultado.error.includes("ID")) {
+                  mensagemErro = "Erro ao processar o pedido. Tente novamente.";
+                } else {
+                  mensagemErro = resultado.error;
+                }
+              }
+
+              alert(`❌ Erro: ${mensagemErro}`);
+
+              // Mostrar detalhes no console para debug
+              if (resultado.debug_response) {
+                console.error("Debug do erro:", resultado.debug_response);
+              }
             }
-          } catch (err) {
-            console.error(err);
-            alert("Erro ao conectar ao servidor.");
+          } catch (error) {
+            console.error("Erro ao finalizar compra:", error);
+
+            let mensagem = "Erro ao conectar ao servidor.";
+            if (error.message.includes("JSON")) {
+              mensagem = "Erro no formato da resposta do servidor.";
+            } else if (error.message.includes("network")) {
+              mensagem = "Erro de conexão. Verifique sua internet.";
+            }
+
+            alert(`❌ ${mensagem}\n\nPor favor, tente novamente mais tarde.`);
+          } finally {
+            // Reativar botão
+            btn.disabled = false;
+            btn.textContent = "Finalizar Compra";
           }
         });
 
