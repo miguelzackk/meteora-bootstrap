@@ -13,190 +13,674 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .login-alert {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1050;
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+      }
+      .login-alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+      }
+      .hidden-content {
+        display: none !important;
+      }
+    </style>
   </head>
   <body style="font-family: 'Inter', sans-serif">
-    <header
-      class="bg-black d-flex w-100 align-items-center"
-      style="height: 58px; padding: 0 23px"
-    >
-      <!-- Header igual às outras páginas -->
-    </header>
-
-    <section class="container my-5">
-      <h1 class="text-center mb-5">Meu Carrinho</h1>
-
-      <div id="carrinho-vazio" class="text-center" style="display: none">
-        <h3 class="text-muted">Seu carrinho está vazio</h3>
-        <p>Adicione alguns produtos incríveis!</p>
-        <a
-          href="index.html"
-          class="btn"
-          style="background-color: blueviolet; color: white"
-          >Continuar Comprando</a
-        >
-      </div>
-
-      <div id="carrinho-itens">
-        <div class="row">
-          <div class="col-md-8">
-            <div id="lista-carrinho"></div>
+    <!-- Modal Login -->
+    <div class="modal fade" id="modalLogin" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Resumo do Pedido</h5>
-                <div class="d-flex justify-content-between mb-2">
-                  <span>Subtotal:</span>
-                  <span id="subtotal">R$ 0,00</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                  <span>Frete:</span>
-                  <span id="frete">Grátis</span>
-                </div>
-                <hr />
-                <div class="d-flex justify-content-between mb-3">
-                  <strong>Total:</strong>
-                  <strong id="total">R$ 0,00</strong>
-                </div>
-                <button
-                  id="btn-finalizar"
-                  class="btn w-100"
-                  style="background-color: blueviolet; color: white"
-                  disabled
-                >
-                  Finalizar Compra
-                </button>
+          <div class="modal-body">
+            <form id="formLogin">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  required
+                />
               </div>
+              <div class="mb-3">
+                <label for="loginSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Entrar
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarCadastro()"
+                >Não tem conta? Cadastre-se</a
+              >
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <script>
-      function carregarCarrinho() {
-        const carrinho = authManager.getCarrinho();
-        const listaCarrinho = document.getElementById("lista-carrinho");
-        const carrinhoVazio = document.getElementById("carrinho-vazio");
-        const carrinhoItens = document.getElementById("carrinho-itens");
-
-        if (!carrinho || carrinho.length === 0) {
-          carrinhoVazio.style.display = "block";
-          carrinhoItens.style.display = "none";
-          return;
-        }
-
-        carrinhoVazio.style.display = "none";
-        carrinhoItens.style.display = "block";
-        listaCarrinho.innerHTML = "";
-
-        carrinho.forEach((item) => {
-          const itemSeguro = {
-            id_produto: item.id_produto || 0,
-            nome: item.nome || "Produto sem nome",
-            preco: item.preco || 0,
-            imagem:
-              item.imagem ||
-              `https://picsum.photos/100/100?random=${item.id_produto || 1}`,
-            categoria: item.categoria || "Sem categoria",
-            estoque: item.estoque || 0,
-            quantidade: item.quantidade || 1,
-          };
-
-          const itemElement = document.createElement("div");
-          itemElement.className = "card mb-3";
-          itemElement.innerHTML = `
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-md-2">
-                  <img src="${itemSeguro.imagem}" class="img-fluid rounded"
-                       alt="${itemSeguro.nome}"
-                       style="height: 80px; width: 80px; object-fit: cover;"
-                       onerror="this.src='https://picsum.photos/80/80?random=${
-                         itemSeguro.id_produto
-                       }'">
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Criar Conta</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formCadastro">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroNome" class="form-label">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroNome"
+                    required
+                  />
                 </div>
-                <div class="col-md-4">
-                  <h6 class="mb-1">${itemSeguro.nome}</h6>
-                  <small class="text-muted">${itemSeguro.categoria}</small>
-                  <p class="mb-0 fw-bold text-primary">R$ ${itemSeguro.preco
-                    .toFixed(2)
-                    .replace(".", ",")}</p>
-                </div>
-                <div class="col-md-3">
-                  <label class="form-label small mb-1">Quantidade</label>
-                  <input type="number" class="form-control form-control-sm"
-                         value="${itemSeguro.quantidade}" min="1" 
-                         max="${itemSeguro.estoque}"
-                         onchange="atualizarQuantidade(${
-                           itemSeguro.id_produto
-                         }, this.value)">
-                </div>
-                <div class="col-md-2">
-                  <p class="mb-1 small">Subtotal</p>
-                  <p class="fw-bold">R$ ${(
-                    itemSeguro.preco * itemSeguro.quantidade
-                  )
-                    .toFixed(2)
-                    .replace(".", ",")}</p>
-                </div>
-                <div class="col-md-1">
-                  <button class="btn btn-outline-danger btn-sm"
-                          onclick="removerItem(${itemSeguro.id_produto})"
-                          title="Remover item">×</button>
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroSobrenome" class="form-label"
+                    >Sobrenome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroSobrenome"
+                    required
+                  />
                 </div>
               </div>
-            </div>`;
-          listaCarrinho.appendChild(itemElement);
-        });
+              <div class="mb-3">
+                <label for="cadastroEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="cadastroEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroSenha"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroConfirmarSenha" class="form-label"
+                  >Confirmar Senha</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroConfirmarSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Criar Conta
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarLogin()">Já tem conta? Faça login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        atualizarResumo();
+    <!-- PRIMEIRO: Overlay e Modal (sempre visíveis no carregamento) -->
+    <div
+      id="login-overlay"
+      class="login-alert-overlay"
+      style="display: none"
+    ></div>
+
+    <div id="login-alert" class="login-alert" style="display: none">
+      <h4 class="mb-3">Acesso Restrito</h4>
+      <p class="mb-4">
+        Você precisa estar logado para acessar o carrinho de compras.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <button
+          id="btn-login-redirect"
+          class="btn"
+          style="background-color: blueviolet; color: white"
+        >
+          Fazer Login
+        </button>
+        <button id="btn-cancel-redirect" class="btn btn-outline-secondary">
+          Continuar Navegando
+        </button>
+      </div>
+    </div>
+
+    <!-- SEGUNDO: Conteúdo principal (inicialmente escondido) -->
+    <div id="main-content" class="hidden-content">
+      <header
+        class="bg-black d-flex w-100 align-items-center"
+        style="height: 58px; padding: 0 23px"
+      >
+        <!-- Header igual às outras páginas -->
+      </header>
+
+      <section class="container my-5">
+        <h1 class="text-center mb-5">Meu Carrinho</h1>
+
+        <div id="carrinho-vazio" class="text-center" style="display: none">
+          <h3 class="text-muted">Seu carrinho está vazio</h3>
+          <p>Adicione alguns produtos incríveis!</p>
+          <a
+            href="index.html"
+            class="btn"
+            style="background-color: blueviolet; color: white"
+            >Continuar Comprando</a
+          >
+        </div>
+
+        <div id="carrinho-itens">
+          <div class="row">
+            <div class="col-md-8">
+              <div id="lista-carrinho"></div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Resumo do Pedido</h5>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>Frete:</span>
+                    <span id="frete">Grátis</span>
+                  </div>
+                  <hr />
+                  <div class="d-flex justify-content-between mb-3">
+                    <strong>Total:</strong>
+                    <strong id="total">R$ 0,00</strong>
+                  </div>
+                  <button
+                    id="btn-finalizar"
+                    class="btn w-100"
+                    style="background-color: blueviolet; color: white"
+                    disabled
+                  >
+                    Finalizar Compra
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+   
+      let authManagerLoaded = false;
+      let pageInitialized = false;
+
+
+      function abrirModalLogin() {
+        const modalLoginElement = document.getElementById("modalLogin");
+        if (modalLoginElement) {
+          const modalLogin = new bootstrap.Modal(modalLoginElement);
+          modalLogin.show();
+        }
       }
 
+      function mostrarCadastro() {
+        const modalLogin = bootstrap.Modal.getInstance(
+          document.getElementById("modalLogin")
+        );
+        if (modalLogin) {
+          modalLogin.hide();
+        }
+
+        const modalCadastroElement = document.getElementById("modalCadastro");
+        if (modalCadastroElement) {
+          const modalCadastro = new bootstrap.Modal(modalCadastroElement);
+          modalCadastro.show();
+        }
+      }
+
+      function mostrarLogin() {
+        const modalCadastro = bootstrap.Modal.getInstance(
+          document.getElementById("modalCadastro")
+        );
+        if (modalCadastro) {
+          modalCadastro.hide();
+        }
+
+        const modalLoginElement = document.getElementById("modalLogin");
+        if (modalLoginElement) {
+          const modalLogin = new bootstrap.Modal(modalLoginElement);
+          modalLogin.show();
+        }
+      }
+
+      // 🟣 FUNÇÃO PARA INICIALIZAR A PÁGINA APÓS VERIFICAÇÃO DE AUTENTICAÇÃO
+      function initializePage() {
+        if (pageInitialized) return;
+
+        try {
+          console.log("🔍 Inicializando página...");
+
+          if (typeof authManager === "undefined") {
+            console.error("❌ authManager não carregado!");
+            mostrarAlertaLogin(
+              "Erro ao carregar o sistema. Recarregue a página."
+            );
+            return;
+          }
+
+          console.log("Usuário logado?", authManager.usuarioLogado);
+
+          // Verificar se o usuário está logado
+          if (!authManager.usuarioLogado) {
+            console.log(
+              "⚠️ Usuário não autenticado, mostrando modal de login..."
+            );
+            mostrarAlertaLogin();
+            return;
+          }
+
+          // Se chegou aqui, usuário está logado
+          console.log("✅ Usuário autenticado, carregando carrinho...");
+          esconderAlertaLogin();
+          mostrarConteudoPrincipal();
+          carregarCarrinho();
+          pageInitialized = true;
+        } catch (error) {
+          console.error("❌ Erro na inicialização:", error);
+          mostrarAlertaLogin("Erro ao inicializar a página. Tente novamente.");
+        }
+      }
+
+      // 🟣 MOSTRAR ALERTA DE LOGIN
+      function mostrarAlertaLogin(mensagemPersonalizada = null) {
+        console.log("🔄 Mostrando alerta de login...");
+
+        const overlay = document.getElementById("login-overlay");
+        const alerta = document.getElementById("login-alert");
+        const mainContent = document.getElementById("main-content");
+
+        // Esconde conteúdo principal
+        if (mainContent) {
+          mainContent.classList.add("hidden-content");
+        }
+
+        // Atualiza mensagem se fornecida
+        if (mensagemPersonalizada && alerta) {
+          const paragrafo = alerta.querySelector("p");
+          if (paragrafo) {
+            paragrafo.textContent = mensagemPersonalizada;
+          }
+        }
+
+        // Mostra o alerta
+        if (overlay) overlay.style.display = "block";
+        if (alerta) alerta.style.display = "block";
+
+        console.log("✅ Alerta de login mostrado");
+      }
+
+      // 🟣 ESCONDER ALERTA DE LOGIN
+      function esconderAlertaLogin() {
+        console.log("🔄 Escondendo alerta de login...");
+
+        const overlay = document.getElementById("login-overlay");
+        const alerta = document.getElementById("login-alert");
+
+        if (overlay) overlay.style.display = "none";
+        if (alerta) alerta.style.display = "none";
+
+        console.log("✅ Alerta de login escondido");
+      }
+
+      // 🟣 MOSTRAR CONTEÚDO PRINCIPAL
+      function mostrarConteudoPrincipal() {
+        console.log("🔄 Mostrando conteúdo principal...");
+
+        const mainContent = document.getElementById("main-content");
+        if (mainContent) {
+          mainContent.classList.remove("hidden-content");
+        }
+
+        console.log("✅ Conteúdo principal mostrado");
+      }
+
+      // 🟣 REDIRECIONAR PARA LOGIN
+      document
+        .getElementById("btn-login-redirect")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          console.log("🔄 Redirecionando para login...");
+
+          esconderAlertaLogin();
+
+          // Usar função local para abrir modal
+          abrirModalLogin();
+        });
+
+      // 🟣 CANCELAR E VOLTAR PARA HOME
+      document
+        .getElementById("btn-cancel-redirect")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          console.log("🔄 Cancelando e voltando para home...");
+
+          window.location.href = "index.html";
+        });
+
+      // 🟣 CONFIGURAR FORMULÁRIOS DE LOGIN E CADASTRO
+      function configurarForms() {
+        // Form de Login
+        const formLogin = document.getElementById("formLogin");
+        if (formLogin) {
+          formLogin.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const senha = document.getElementById("loginSenha").value;
+
+            if (!email || !senha) {
+              alert("Preencha todos os campos!");
+              return;
+            }
+
+            if (typeof authManager !== "undefined") {
+              const resultado = await authManager.login(email, senha);
+              if (resultado.success) {
+                // Fechar modal
+                const modalLogin = bootstrap.Modal.getInstance(
+                  document.getElementById("modalLogin")
+                );
+                if (modalLogin) {
+                  modalLogin.hide();
+                }
+
+                // Disparar evento de login
+                window.dispatchEvent(new CustomEvent("usuarioLogado"));
+
+                // Recarregar página para mostrar carrinho
+                window.location.reload();
+              } else {
+                alert(resultado.message);
+              }
+            } else {
+              alert("Erro: Sistema de autenticação não carregado");
+            }
+          });
+        }
+
+        // Form de Cadastro
+        const formCadastro = document.getElementById("formCadastro");
+        if (formCadastro) {
+          formCadastro.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const nome = document.getElementById("cadastroNome").value;
+            const sobrenome =
+              document.getElementById("cadastroSobrenome").value;
+            const email = document.getElementById("cadastroEmail").value;
+            const senha = document.getElementById("cadastroSenha").value;
+            const confirmarSenha = document.getElementById(
+              "cadastroConfirmarSenha"
+            ).value;
+
+            if (!nome || !sobrenome || !email || !senha || !confirmarSenha) {
+              alert("Preencha todos os campos!");
+              return;
+            }
+
+            if (senha !== confirmarSenha) {
+              alert("As senhas não coincidem!");
+              return;
+            }
+
+            if (senha.length < 6) {
+              alert("A senha deve ter pelo menos 6 caracteres!");
+              return;
+            }
+
+            if (typeof authManager !== "undefined") {
+              const resultado = await authManager.cadastrar(
+                nome,
+                sobrenome,
+                email,
+                senha
+              );
+              if (resultado.success) {
+                // Fechar modal
+                const modalCadastro = bootstrap.Modal.getInstance(
+                  document.getElementById("modalCadastro")
+                );
+                if (modalCadastro) {
+                  modalCadastro.hide();
+                }
+                mostrarLogin();
+                alert("Conta criada com sucesso! Faça login.");
+              } else {
+                alert(resultado.message);
+              }
+            } else {
+              alert("Erro: Sistema de autenticação não carregado");
+            }
+          });
+        }
+      }
+
+      // 🟣 FUNÇÃO PRINCIPAL DE CARREGAMENTO DO CARRINHO
+      function carregarCarrinho() {
+        console.log("🔄 Carregando carrinho...");
+
+        try {
+          const carrinho = authManager.getCarrinho();
+          const listaCarrinho = document.getElementById("lista-carrinho");
+          const carrinhoVazio = document.getElementById("carrinho-vazio");
+          const carrinhoItens = document.getElementById("carrinho-itens");
+
+          if (!carrinho || !Array.isArray(carrinho)) {
+            console.error("❌ Carrinho inválido");
+            carrinhoVazio.style.display = "block";
+            carrinhoItens.style.display = "none";
+            carrinhoVazio.innerHTML = `
+              <h3 class="text-muted">Erro ao carregar carrinho</h3>
+              <p class="text-danger mb-3">Houve um problema ao carregar seus itens.</p>
+              <a href="index.html" class="btn btn-outline-primary">Voltar para a Loja</a>
+            `;
+            return;
+          }
+
+          if (carrinho.length === 0) {
+            console.log("📭 Carrinho vazio");
+            carrinhoVazio.style.display = "block";
+            carrinhoItens.style.display = "none";
+            return;
+          }
+
+          console.log(`🛒 ${carrinho.length} itens no carrinho`);
+          carrinhoVazio.style.display = "none";
+          carrinhoItens.style.display = "block";
+          listaCarrinho.innerHTML = "";
+
+          carrinho.forEach((item) => {
+            const itemSeguro = {
+              id_produto: item.id_produto || 0,
+              nome: item.nome || "Produto sem nome",
+              preco: item.preco || 0,
+              imagem:
+                item.imagem ||
+                `https://picsum.photos/100/100?random=${item.id_produto || 1}`,
+              categoria: item.categoria || "Sem categoria",
+              estoque: item.estoque || 0,
+              quantidade: item.quantidade || 1,
+            };
+
+            const itemElement = document.createElement("div");
+            itemElement.className = "card mb-3";
+            itemElement.innerHTML = `
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-2">
+                    <img src="${itemSeguro.imagem}" class="img-fluid rounded"
+                         alt="${itemSeguro.nome}"
+                         style="height: 80px; width: 80px; object-fit: cover;"
+                         onerror="this.src='https://picsum.photos/80/80?random=${
+                           itemSeguro.id_produto
+                         }'">
+                  </div>
+                  <div class="col-md-4">
+                    <h6 class="mb-1">${itemSeguro.nome}</h6>
+                    <small class="text-muted">${itemSeguro.categoria}</small>
+                    <p class="mb-0 fw-bold text-primary">R$ ${itemSeguro.preco
+                      .toFixed(2)
+                      .replace(".", ",")}</p>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label small mb-1">Quantidade</label>
+                    <input type="number" class="form-control form-control-sm"
+                           value="${itemSeguro.quantidade}" min="1" 
+                           max="${itemSeguro.estoque}"
+                           onchange="atualizarQuantidade(${
+                             itemSeguro.id_produto
+                           }, this.value)">
+                  </div>
+                  <div class="col-md-2">
+                    <p class="mb-1 small">Subtotal</p>
+                    <p class="fw-bold">R$ ${(
+                      itemSeguro.preco * itemSeguro.quantidade
+                    )
+                      .toFixed(2)
+                      .replace(".", ",")}</p>
+                  </div>
+                  <div class="col-md-1">
+                    <button class="btn btn-outline-danger btn-sm"
+                            onclick="removerItem(${itemSeguro.id_produto})"
+                            title="Remover item">×</button>
+                  </div>
+                </div>
+              </div>`;
+            listaCarrinho.appendChild(itemElement);
+          });
+
+          atualizarResumo();
+          console.log("✅ Carrinho carregado com sucesso");
+        } catch (error) {
+          console.error("❌ Erro ao carregar carrinho:", error);
+          alert("Erro ao carregar o carrinho. Tente novamente.");
+        }
+      }
+
+      // 🟣 ATUALIZAR QUANTIDADE
       function atualizarQuantidade(idProduto, quantidade) {
-        const quant = parseInt(quantidade);
-        if (isNaN(quant) || quant < 1) {
-          alert("Quantidade inválida");
-          carregarCarrinho();
-          return;
-        }
+        try {
+          const quant = parseInt(quantidade);
+          if (isNaN(quant) || quant < 1) {
+            alert("Quantidade inválida");
+            carregarCarrinho();
+            return;
+          }
 
-        authManager.atualizarQuantidade(idProduto, quant);
-        carregarCarrinho();
+          authManager.atualizarQuantidade(idProduto, quant);
+          carregarCarrinho();
+        } catch (error) {
+          console.error("Erro ao atualizar quantidade:", error);
+          alert("Erro ao atualizar quantidade. Tente novamente.");
+        }
       }
 
+      // 🟣 REMOVER ITEM
       function removerItem(idProduto) {
-        if (confirm("Tem certeza que deseja remover este item do carrinho?")) {
-          authManager.removerDoCarrinho(idProduto);
-          carregarCarrinho();
+        try {
+          if (
+            confirm("Tem certeza que deseja remover este item do carrinho?")
+          ) {
+            authManager.removerDoCarrinho(idProduto);
+            carregarCarrinho();
+          }
+        } catch (error) {
+          console.error("Erro ao remover item:", error);
+          alert("Erro ao remover item. Tente novamente.");
         }
       }
 
+      // 🟣 ATUALIZAR RESUMO
       function atualizarResumo() {
-        const carrinho = authManager.getCarrinho();
-        let subtotal = 0;
+        try {
+          const carrinho = authManager.getCarrinho();
+          let subtotal = 0;
 
-        carrinho.forEach((item) => {
-          subtotal += (item.preco || 0) * (item.quantidade || 0);
-        });
+          carrinho.forEach((item) => {
+            subtotal += (item.preco || 0) * (item.quantidade || 0);
+          });
 
-        const frete = subtotal > 200 ? 0 : 15;
-        const total = subtotal + frete;
+          const frete = subtotal > 200 ? 0 : 15;
+          const total = subtotal + frete;
 
-        document.getElementById("subtotal").textContent = `R$ ${subtotal
-          .toFixed(2)
-          .replace(".", ",")}`;
-        document.getElementById("frete").textContent =
-          frete === 0 ? "Grátis" : `R$ ${frete.toFixed(2).replace(".", ",")}`;
-        document.getElementById("total").textContent = `R$ ${total
-          .toFixed(2)
-          .replace(".", ",")}`;
+          document.getElementById("subtotal").textContent = `R$ ${subtotal
+            .toFixed(2)
+            .replace(".", ",")}`;
+          document.getElementById("frete").textContent =
+            frete === 0 ? "Grátis" : `R$ ${frete.toFixed(2).replace(".", ",")}`;
+          document.getElementById("total").textContent = `R$ ${total
+            .toFixed(2)
+            .replace(".", ",")}`;
 
-        document.getElementById("btn-finalizar").disabled = subtotal === 0;
+          document.getElementById("btn-finalizar").disabled = subtotal === 0;
+        } catch (error) {
+          console.error("Erro ao atualizar resumo:", error);
+        }
       }
 
-      // 🟣 Função principal — finaliza a compra e chama o backend
-      // Substitua a função de finalizar compra no arquivo carrinho.html
+      // 🟣 FINALIZAR COMPRA
       document
         .getElementById("btn-finalizar")
         .addEventListener("click", async function () {
@@ -204,7 +688,7 @@
 
           if (!authManager.usuarioLogado) {
             alert("Faça login para finalizar a compra!");
-            authManager.abrirModalLogin();
+            abrirModalLogin();
             return;
           }
 
@@ -218,7 +702,6 @@
             return;
           }
 
-          // Verificar se todos os itens têm id_produto válido
           const itensInvalidos = carrinho.filter(
             (item) => !item.id_produto || item.id_produto <= 0
           );
@@ -231,7 +714,6 @@
           }
 
           try {
-            // Desabilitar botão e mostrar carregando
             btn.disabled = true;
             btn.innerHTML =
               '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processando...';
@@ -263,7 +745,6 @@
               }
             );
 
-            // Verificar se a resposta é JSON
             const contentType = response.headers.get("content-type");
             if (!contentType || !contentType.includes("application/json")) {
               const text = await response.text();
@@ -275,7 +756,6 @@
             console.log("Resposta do servidor:", resultado);
 
             if (resultado.success) {
-              // Formatar valores para exibição
               const valorFormatado = resultado.valor_total.toLocaleString(
                 "pt-BR",
                 {
@@ -288,13 +768,11 @@
                 `✅ Compra finalizada com sucesso!\n\nPedido: #${resultado.id_compra}\nValor Total: ${valorFormatado}\nItens: ${resultado.quantidade_itens}`
               );
 
-              // Limpar carrinho
               authManager.carrinho = [];
               authManager.salvarCarrinho();
               authManager.atualizarContadorCarrinho();
               carregarCarrinho();
             } else {
-              // Tratar erro específico
               let mensagemErro = "Não foi possível finalizar a compra.";
 
               if (resultado.error) {
@@ -310,7 +788,6 @@
 
               alert(`❌ Erro: ${mensagemErro}`);
 
-              // Mostrar detalhes no console para debug
               if (resultado.debug_response) {
                 console.error("Debug do erro:", resultado.debug_response);
               }
@@ -327,14 +804,63 @@
 
             alert(`❌ ${mensagem}\n\nPor favor, tente novamente mais tarde.`);
           } finally {
-            // Reativar botão
             btn.disabled = false;
             btn.textContent = "Finalizar Compra";
           }
         });
 
-      document.addEventListener("DOMContentLoaded", carregarCarrinho);
+      // 🟣 INICIALIZAÇÃO DA PÁGINA
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("📄 DOM carregado, verificando autenticação...");
+
+        // Configurar os forms de login/cadastro
+        configurarForms();
+
+        // Verificar autenticação
+        const checkAuth = setInterval(function () {
+          if (typeof authManager !== "undefined") {
+            clearInterval(checkAuth);
+            console.log("✅ authManager carregado!");
+
+            if (authManager.usuarioLogado) {
+              console.log("✅ Usuário já logado, mostrando carrinho...");
+              mostrarConteudoPrincipal();
+              carregarCarrinho();
+            } else {
+              console.log("⚠️ Usuário não logado, mostrando alerta...");
+              mostrarAlertaLogin();
+            }
+          }
+        }, 100);
+
+        // Timeout de segurança
+        setTimeout(function () {
+          clearInterval(checkAuth);
+          if (typeof authManager === "undefined") {
+            console.error("❌ authManager não carregado após timeout");
+            mostrarAlertaLogin(
+              "Erro ao carregar o sistema. Recarregue a página."
+            );
+          }
+        }, 3000);
+      });
+
+      // 🟣 LISTENER PARA MUDANÇAS NO LOGIN
+      window.addEventListener("usuarioLogado", function () {
+        console.log("🎉 Evento de login detectado, reinicializando página...");
+        window.location.reload();
+      });
     </script>
+
+    <!-- Bootstrap JS e Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
 
     <script src="/src/scripts/auth.js"></script>
   </body>

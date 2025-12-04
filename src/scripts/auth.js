@@ -473,14 +473,14 @@ class AuthManager {
   }
 
   // Verificar se usuário está logado (para proteção de rotas)
-  verificarAutenticacao() {
-    if (!this.usuarioLogado) {
-      this.mostrarMensagem("Faça login para acessar esta página!", "warning");
-      this.abrirModalLogin();
-      return false;
-    }
-    return true;
-  }
+  // verificarAutenticacao() {
+  //   if (!this.usuarioLogado) {
+  //     this.mostrarMensagem("Faça login para acessar esta página!", "warning");
+  //     this.abrirModalLogin();
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   // Atualizar perfil do usuário
   async atualizarPerfil(dados) {
