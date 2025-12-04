@@ -14,6 +14,46 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 5%;
+        background: none;
+        border: none;
+        opacity: 1;
+      }
+
+      .carousel-control-prev img,
+      .carousel-control-next img {
+        width: 40px;
+        height: 40px;
+        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+      }
+
+      .carousel-control-prev:hover,
+      .carousel-control-next:hover {
+        background: none;
+      }
+
+      .carousel-control-prev {
+        left: 10px;
+      }
+
+      .carousel-control-next {
+        right: 10px;
+      }
+
+      .carousel-inner,
+      .carousel-item,
+      .carousel-item img {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .carousel {
+        overflow: hidden;
+      }
+    </style>
   </head>
 
   <body style="font-family: 'Inter', sans-serif">
@@ -108,7 +148,6 @@
               </button>
             </form>
 
-            <!-- Ícone do Carrinho -->
             <a
               href="carrinho.html"
               class="text-white text-decoration-none position-relative"
@@ -135,7 +174,6 @@
               >
             </a>
 
-            <!-- Botão de Login/Usuário -->
             <div id="auth-buttons">
               <button
                 class="btn btn-outline-light"
@@ -149,10 +187,12 @@
         </div>
       </nav>
     </header>
+
     <div
       id="carouselExampleIndicators"
       class="carousel slide"
       data-bs-ride="carousel"
+      style="position: relative"
     >
       <div class="carousel-indicators">
         <button
@@ -176,12 +216,13 @@
           aria-label="Slide 3"
         ></button>
       </div>
-      <div class="carousel-inner">
+      <div class="carousel-inner" style="width: 100%">
         <div class="carousel-item active">
           <img
             src="/src/assets/images/carousel-1.webp"
             class="d-block w-100"
             alt="Primeira Imagem do Carrosel"
+            style="width: 100%; height: auto; object-fit: cover"
           />
         </div>
         <div class="carousel-item">
@@ -189,6 +230,7 @@
             src="/src/assets/images/carousel-2.webp"
             class="d-block w-100"
             alt="Segunda Imagem do Carrosel"
+            style="width: 100%; height: auto; object-fit: cover"
           />
         </div>
         <div class="carousel-item">
@@ -196,19 +238,25 @@
             src="/src/assets/images/carousel-3.webp"
             class="d-block w-100"
             alt="Terceira Imagem do Carrosel"
+            style="width: 100%; height: auto; object-fit: cover"
           />
         </div>
       </div>
+
       <button
         class="carousel-control-prev"
         type="button"
         data-bs-target="#carouselExampleIndicators"
         data-bs-slide="prev"
+        style="background: transparent; border: none; padding: 0"
       >
-        <img
-          src="/src/assets/images/icon-arrow-left.webp"
-          alt="Ícone Seta para Esquerda"
-        />
+        <span style="display: inline-block; width: 40px; height: 40px">
+          <img
+            src="/src/assets/images/icon-arrow-left.webp"
+            alt="Ícone Seta para Esquerda"
+            style="width: 100%; height: 100%"
+          />
+        </span>
         <span class="visually-hidden">Previous</span>
       </button>
       <button
@@ -216,16 +264,19 @@
         type="button"
         data-bs-target="#carouselExampleIndicators"
         data-bs-slide="next"
+        style="background: transparent; border: none; padding: 0"
       >
-        <img
-          src="/src/assets/images/icon-arrow-right.webp"
-          alt="Ícone Seta para Direita"
-        />
+        <span style="display: inline-block; width: 40px; height: 40px">
+          <img
+            src="/src/assets/images/icon-arrow-right.webp"
+            alt="Ícone Seta para Direita"
+            style="width: 100%; height: 100%"
+          />
+        </span>
         <span class="visually-hidden">Next</span>
       </button>
     </div>
 
-    <!-- Seção Categorias (Dinâmica) -->
     <section class="d-flex flex-column" style="gap: 32px">
       <h1
         class="fw-medium text-center"
@@ -238,12 +289,10 @@
         style="gap: 30px"
         id="categorias-container"
       >
-        <!-- Categorias serão carregadas via JavaScript -->
         <div class="text-center">Carregando categorias...</div>
       </div>
     </section>
 
-    <!-- Seção Produtos (Dinâmica) -->
     <section
       class="d-flex flex-column flex-wrap align-items-center"
       style="margin-top: 48px; gap: 30px"
@@ -252,7 +301,6 @@
 
       <div class="container">
         <div class="row g-4" id="produtos-container">
-          <!-- Produtos serão carregados via JavaScript -->
           <div class="col-12 text-center">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Carregando produtos...</span>
@@ -390,7 +438,6 @@
       </p>
     </footer>
 
-    <!-- Modal Login -->
     <div class="modal fade" id="modalLogin" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -440,7 +487,6 @@
       </div>
     </div>
 
-    <!-- Modal Cadastro -->
     <div class="modal fade" id="modalCadastro" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -530,11 +576,40 @@
     ></script>
 
     <script>
-      // Carousel e navegação
+      // Função para corrigir o carrossel
+      function corrigirCarrossel() {
+        const carousel = document.getElementById("carouselExampleIndicators");
+        const images = carousel.querySelectorAll(".carousel-item img");
+
+        // Garantir que todas as imagens tenham 100% de largura
+        images.forEach((img) => {
+          img.style.width = "100%";
+          img.style.maxWidth = "100%";
+          img.style.objectFit = "cover";
+        });
+
+        // Remover qualquer espaçamento extra
+        const carouselInner = carousel.querySelector(".carousel-inner");
+        carouselInner.style.margin = "0";
+        carouselInner.style.padding = "0";
+      }
+
       var myCarousel = document.querySelector("#carouselExampleIndicators");
       var carousel = new bootstrap.Carousel(myCarousel, {
         interval: 2000,
         ride: "carousel",
+      });
+
+      // Corrigir o carrossel após o carregamento
+      document.addEventListener("DOMContentLoaded", function () {
+        corrigirCarrossel();
+        // Corrigir também quando as imagens carregarem
+        const images = document.querySelectorAll(
+          "#carouselExampleIndicators img"
+        );
+        images.forEach((img) => {
+          img.onload = corrigirCarrossel;
+        });
       });
 
       document.querySelectorAll(".nav-link").forEach((link) => {
@@ -549,7 +624,6 @@
         });
       });
 
-      // Mapeamento de categorias para imagens
       const categoriaImagens = {
         Camisetas: "/src/assets/images/camisa.webp",
         Bolsas: "/src/assets/images/bolsa.webp",
@@ -559,7 +633,6 @@
         Óculos: "/src/assets/images/óculos.webp",
       };
 
-      // Carregar categorias
       async function carregarCategorias() {
         try {
           console.log("Carregando categorias...");
@@ -573,7 +646,6 @@
 
           const data = await response.json();
 
-          // Se tiver erro, usar dados mock
           if (data.error || !Array.isArray(data)) {
             console.log("Usando dados mock para categorias");
             renderizarCategorias(dadosMockCategorias);
@@ -588,7 +660,6 @@
         }
       }
 
-      // Carregar produtos
       async function carregarProdutos() {
         try {
           console.log("Carregando produtos...");
@@ -602,7 +673,6 @@
 
           const data = await response.json();
 
-          // Se tiver erro, usar dados mock
           if (data.error || !Array.isArray(data)) {
             console.log("Usando dados mock para produtos");
             renderizarProdutos(dadosMockProdutos);
@@ -617,7 +687,6 @@
         }
       }
 
-      // Funções para renderizar
       function renderizarCategorias(categorias) {
         const containerCategorias = document.getElementById(
           "categorias-container"
@@ -692,7 +761,6 @@
         });
       }
 
-      // Dados mock como fallback
       const dadosMockCategorias = [
         { categoria: "Camisetas" },
         { categoria: "Bolsas" },
@@ -734,7 +802,6 @@
         },
       ];
 
-      // Inicializar quando a página carregar
       document.addEventListener("DOMContentLoaded", function () {
         carregarCategorias();
         carregarProdutos();

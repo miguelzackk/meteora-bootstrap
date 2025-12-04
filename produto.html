@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalhes do Produto</title>
+    <link rel="stylesheet" href="/src/styles/reset.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -15,7 +16,6 @@
     />
   </head>
   <body style="font-family: 'Inter', sans-serif">
-    <!-- Header (igual às outras páginas) -->
     <header
       class="bg-black d-flex w-100 align-items-center"
       style="height: 58px; padding: 0 23px"
@@ -44,6 +44,25 @@
                 alt="Logo Meteora"
               />
             </a>
+            <div class="collapse navbar-collapse d-flex" id="navbarNav">
+              <ul
+                class="navbar-nav d-flex align-items-center"
+                style="gap: 40px"
+              >
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    href="index.html"
+                    style="
+                      color: white !important;
+                      font-weight: bold;
+                      padding: 0;
+                    "
+                    >Home</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="d-flex align-items-center" style="gap: 20px">
             <form class="d-flex align-items-center" id="searchForm">
@@ -77,7 +96,6 @@
               </button>
             </form>
 
-            <!-- Ícone do Carrinho -->
             <a
               href="carrinho.html"
               class="text-white text-decoration-none position-relative"
@@ -104,7 +122,6 @@
               >
             </a>
 
-            <!-- Botão de Login/Usuário -->
             <div id="auth-buttons">
               <button
                 class="btn btn-outline-light"
@@ -139,7 +156,135 @@
       </p>
     </footer>
 
-    <!-- Modals de Login/Cadastro (copie do index.html) -->
+    <div class="modal fade" id="modalLogin" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formLogin">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Entrar
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarCadastro()"
+                >Não tem conta? Cadastre-se</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalCadastro" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Criar Conta</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formCadastro">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroNome" class="form-label">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroNome"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="cadastroSobrenome" class="form-label"
+                    >Sobrenome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cadastroSobrenome"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="cadastroEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="cadastroEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroSenha" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroSenha"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cadastroConfirmarSenha" class="form-label"
+                  >Confirmar Senha</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="cadastroConfirmarSenha"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100"
+                style="background-color: blueviolet; color: white"
+              >
+                Criar Conta
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="#" onclick="mostrarLogin()">Já tem conta? Faça login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       crossorigin="anonymous"
@@ -150,7 +295,42 @@
     ></script>
 
     <script>
-      // Função para obter parâmetros da URL
+      function abrirModalLogin() {
+        const modalCadastro = bootstrap.Modal.getInstance(
+          document.getElementById("modalCadastro")
+        );
+        if (modalCadastro) {
+          modalCadastro.hide();
+        }
+
+        const modalLogin = new bootstrap.Modal(
+          document.getElementById("modalLogin")
+        );
+        modalLogin.show();
+      }
+
+      function abrirModalCadastro() {
+        const modalLogin = bootstrap.Modal.getInstance(
+          document.getElementById("modalLogin")
+        );
+        if (modalLogin) {
+          modalLogin.hide();
+        }
+
+        const modalCadastro = new bootstrap.Modal(
+          document.getElementById("modalCadastro")
+        );
+        modalCadastro.show();
+      }
+
+      function mostrarCadastro() {
+        abrirModalCadastro();
+      }
+
+      function mostrarLogin() {
+        abrirModalLogin();
+      }
+
       function getUrlParams() {
         const params = new URLSearchParams(window.location.search);
         return {
@@ -158,7 +338,6 @@
         };
       }
 
-      // Carregar produto
       async function carregarProduto() {
         try {
           const { id } = getUrlParams();
@@ -188,6 +367,9 @@
           }
 
           const produto = data;
+
+          // Verificar se há estoque
+          const temEstoque = produto.estoque > 0;
 
           container.innerHTML = `
                     <div class="col-md-6">
@@ -222,18 +404,32 @@
                             </span>
                         </div>
                         
+                        ${
+                          temEstoque
+                            ? `
                         <div class="d-flex align-items-center mb-4">
                             <label for="quantidade" class="form-label me-3 mb-0">Quantidade:</label>
                             <input type="number" id="quantidade" class="form-control" style="width: 100px;" 
                                    value="1" min="1" max="${produto.estoque}">
                         </div>
                         
-                 <button class="btn w-100 py-3"
-  style="background-color: blueviolet; border: none; color: white; font-size: 1.2rem;"
-  onclick="adicionarProdutoAoCarrinho(${produto.id_produto})">
-  Adicionar ao Carrinho
-</button>
-
+                        <button class="btn w-100 py-3"
+                          style="background-color: blueviolet; border: none; color: white; font-size: 1.2rem;"
+                          onclick="adicionarProdutoAoCarrinho(${produto.id_produto})">
+                          Adicionar ao Carrinho
+                        </button>
+                        `
+                            : `
+                        <div class="alert alert-danger" role="alert">
+                          <strong>Produto esgotado!</strong> Este produto não está disponível no momento.
+                        </div>
+                        <button class="btn w-100 py-3"
+                          style="background-color: #ccc; border: none; color: #666; font-size: 1.2rem; cursor: not-allowed;"
+                          disabled>
+                          Produto Esgotado
+                        </button>
+                        `
+                        }
                         
                         <div class="mt-4">
                             <h5>Características:</h5>
@@ -253,15 +449,51 @@
       }
 
       function adicionarProdutoAoCarrinho(idProduto) {
+        if (typeof authManager === "undefined") {
+          alert(
+            "Sistema de autenticação não carregado. Por favor, recarregue a página."
+          );
+          return;
+        }
+
+        if (!authManager.usuarioLogado) {
+          alert(
+            "Você precisa criar uma conta ou fazer login para adicionar produtos ao carrinho."
+          );
+          abrirModalLogin();
+          return;
+        }
+
         const quantidade = parseInt(
           document.getElementById("quantidade").value
         );
 
-        fetch(`https://backend-meteora-production.up.railway.app/produto.php?id=${idProduto}`)
+        // Verificar se a quantidade é válida
+        if (quantidade < 1) {
+          alert("A quantidade deve ser pelo menos 1.");
+          return;
+        }
+
+        fetch(
+          `https://backend-meteora-production.up.railway.app/produto.php?id=${idProduto}`
+        )
           .then((res) => res.json())
           .then((produto) => {
             if (produto.error) {
               alert("Erro ao carregar produto");
+              return;
+            }
+
+            // Verificar se há estoque suficiente
+            if (produto.estoque <= 0) {
+              alert("Desculpe, este produto está esgotado.");
+              return;
+            }
+
+            if (quantidade > produto.estoque) {
+              alert(
+                `Desculpe, só temos ${produto.estoque} unidades em estoque.`
+              );
               return;
             }
 
@@ -273,7 +505,6 @@
           });
       }
 
-      // Busca
       document
         .getElementById("searchForm")
         .addEventListener("submit", function (e) {
@@ -284,9 +515,83 @@
           }
         });
 
-      // Inicializar quando a página carregar
+      document
+        .getElementById("formLogin")
+        ?.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("loginEmail").value;
+          const senha = document.getElementById("loginSenha").value;
+
+          if (
+            typeof authManager !== "undefined" &&
+            typeof authManager.login === "function"
+          ) {
+            authManager
+              .login(email, senha)
+              .then(() => {
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("modalLogin")
+                );
+                if (modal) {
+                  modal.hide();
+                }
+              })
+              .catch((error) => {
+                alert("Erro no login: " + error.message);
+              });
+          } else {
+            alert("Sistema de autenticação não disponível");
+          }
+        });
+
+      document
+        .getElementById("formCadastro")
+        ?.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const nome = document.getElementById("cadastroNome").value;
+          const sobrenome = document.getElementById("cadastroSobrenome").value;
+          const email = document.getElementById("cadastroEmail").value;
+          const senha = document.getElementById("cadastroSenha").value;
+          const confirmarSenha = document.getElementById(
+            "cadastroConfirmarSenha"
+          ).value;
+
+          if (senha !== confirmarSenha) {
+            alert("As senhas não coincidem!");
+            return;
+          }
+
+          if (
+            typeof authManager !== "undefined" &&
+            typeof authManager.cadastrar === "function"
+          ) {
+            authManager
+              .cadastrar(email, senha, nome + " " + sobrenome)
+              .then(() => {
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("modalCadastro")
+                );
+                if (modal) {
+                  modal.hide();
+                }
+              })
+              .catch((error) => {
+                alert("Erro no cadastro: " + error.message);
+              });
+          } else {
+            alert("Sistema de autenticação não disponível");
+          }
+        });
+
       document.addEventListener("DOMContentLoaded", function () {
         carregarProduto();
+
+        const modalLogin = new bootstrap.Modal(
+          document.getElementById("modalLogin")
+        );
+        const modalCadastro = new bootstrap.Modal(
+          document.getElementById("modalCadastro")
+        );
       });
     </script>
     <script src="/src/scripts/auth.js"></script>

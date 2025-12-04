@@ -1,4 +1,3 @@
-// Gerenciamento de autenticação
 class AuthManager {
   constructor() {
     this.usuarioLogado = null;
@@ -7,29 +6,24 @@ class AuthManager {
   }
 
   init() {
-    // Verificar se há usuário logado no localStorage
     const usuarioSalvo = localStorage.getItem("usuarioLogado");
     if (usuarioSalvo) {
       this.usuarioLogado = JSON.parse(usuarioSalvo);
       this.atualizarHeader();
     }
 
-    // Carregar carrinho do localStorage
     const carrinhoSalvo = localStorage.getItem("carrinho");
     if (carrinhoSalvo) {
       this.carrinho = JSON.parse(carrinhoSalvo);
       this.atualizarContadorCarrinho();
     }
 
-    // Configurar busca em todas as páginas
     this.configurarBusca();
   }
 
-  // Configurar funcionalidade de busca
   configurarBusca() {
     const searchForms = document.querySelectorAll("form");
     searchForms.forEach((form) => {
-      // Verificar se é um formulário de busca (tem input de search)
       const searchInput = form.querySelector('input[type="search"]');
       if (searchInput) {
         form.addEventListener("submit", (e) => {
@@ -43,7 +37,6 @@ class AuthManager {
     });
   }
 
-  // Funções do modal
   abrirModalLogin() {
     const modalLoginElement = document.getElementById("modalLogin");
     if (modalLoginElement) {
@@ -82,7 +75,6 @@ class AuthManager {
     }
   }
 
-  // Login
   async login(email, senha) {
     try {
       console.log("Tentando login com:", email);
@@ -118,7 +110,6 @@ class AuthManager {
         );
         this.atualizarHeader();
 
-        // Fechar modal
         const modalLogin = bootstrap.Modal.getInstance(
           document.getElementById("modalLogin")
         );
@@ -126,7 +117,6 @@ class AuthManager {
           modalLogin.hide();
         }
 
-        // Mostrar mensagem de sucesso
         this.mostrarMensagem("Login realizado com sucesso!", "success");
         return { success: true };
       } else {
@@ -141,7 +131,6 @@ class AuthManager {
     }
   }
 
-  // Cadastro
   async cadastrar(nome, sobrenome, email, senha) {
     try {
       console.log("Tentando cadastrar:", email);
@@ -173,7 +162,6 @@ class AuthManager {
       console.log("Dados recebidos:", data);
 
       if (data.success) {
-        // Fechar modal
         const modalCadastro = bootstrap.Modal.getInstance(
           document.getElementById("modalCadastro")
         );
@@ -181,7 +169,6 @@ class AuthManager {
           modalCadastro.hide();
         }
 
-        // Mostrar mensagem de sucesso e redirecionar para login
         this.mostrarMensagem(
           "Conta criada com sucesso! Faça login.",
           "success"
@@ -203,7 +190,6 @@ class AuthManager {
     }
   }
 
-  // Logout
   logout() {
     this.usuarioLogado = null;
     this.carrinho = [];
@@ -214,13 +200,12 @@ class AuthManager {
     this.mostrarMensagem("Logout realizado com sucesso!", "info");
   }
 
-  // Atualizar header
-atualizarHeader() {
-  const authButtons = document.getElementById("auth-buttons");
-  if (!authButtons) return;
+  atualizarHeader() {
+    const authButtons = document.getElementById("auth-buttons");
+    if (!authButtons) return;
 
-  if (this.usuarioLogado) {
-    authButtons.innerHTML = `
+    if (this.usuarioLogado) {
+      authButtons.innerHTML = `
       <div class="dropdown">
         <button class="btn btn-outline-light dropdown-toggle" type="button" 
                 id="userDropdown" data-bs-toggle="dropdown" 
@@ -236,23 +221,20 @@ atualizarHeader() {
         </ul>
       </div>
     `;
-  } else {
-    authButtons.innerHTML =
-      '<button class="btn btn-outline-light" onclick="authManager.abrirModalLogin()" style="border-radius: 0;">Login</button>';
+    } else {
+      authButtons.innerHTML =
+        '<button class="btn btn-outline-light" onclick="authManager.abrirModalLogin()" style="border-radius: 0;">Login</button>';
+    }
   }
-}
 
-  // Carrinho
-  // No auth.js, verifique a função adicionarAoCarrinho
   adicionarAoCarrinho(produto, quantidade) {
     if (!this.usuarioLogado) {
       this.abrirModalLogin();
       return;
     }
 
-    console.log("Produto recebido:", produto); // DEBUG
+    console.log("Produto recebido:", produto);
 
-    // VALIDAÇÃO CRÍTICA - garantir que todos os campos existem
     if (!produto || !produto.id_produto) {
       console.error("Produto inválido:", produto);
       alert("Erro: Produto inválido");
@@ -270,7 +252,7 @@ atualizarHeader() {
       estoque: parseInt(produto.estoque) || 0,
     };
 
-    console.log("Produto sanitizado:", produtoSanitizado); // DEBUG
+    console.log("Produto sanitizado:", produtoSanitizado);
 
     const carrinho = this.getCarrinho();
     const itemExistente = carrinho.find(
@@ -278,10 +260,8 @@ atualizarHeader() {
     );
 
     if (itemExistente) {
-      // Atualizar quantidade existente
       itemExistente.quantidade += parseInt(quantidade);
     } else {
-      // Adicionar novo item
       carrinho.push({
         ...produtoSanitizado,
         quantidade: parseInt(quantidade),
@@ -364,7 +344,6 @@ atualizarHeader() {
     return this.carrinho.reduce((total, item) => total + item.quantidade, 0);
   }
 
-  // Finalizar compra com atualização de estoque
   async finalizarCompra() {
     if (!this.usuarioLogado) {
       this.mostrarMensagem("Faça login para finalizar a compra!", "warning");
@@ -380,12 +359,10 @@ atualizarHeader() {
     }
 
     try {
-      // Atualizar estoque para cada item
       for (const item of carrinho) {
         await this.atualizarEstoque(item.id_produto, item.quantidade);
       }
 
-      // Limpar carrinho após compra
       this.carrinho = [];
       this.salvarCarrinho();
       this.atualizarContadorCarrinho();
@@ -409,7 +386,6 @@ atualizarHeader() {
     }
   }
 
-  // Função para atualizar estoque na API
   async atualizarEstoque(idProduto, quantidadeVendida) {
     try {
       const response = await fetch(
@@ -443,13 +419,10 @@ atualizarHeader() {
     }
   }
 
-  // Utilitário para mostrar mensagens
   mostrarMensagem(mensagem, tipo = "info") {
-    // Remover mensagens anteriores
     const mensagensExistentes = document.querySelectorAll(".alert-custom");
     mensagensExistentes.forEach((msg) => msg.remove());
 
-    // Criar nova mensagem
     const alertDiv = document.createElement("div");
     alertDiv.className = `alert alert-${tipo} alert-custom position-fixed`;
     alertDiv.style.cssText = `
@@ -466,7 +439,6 @@ atualizarHeader() {
 
     document.body.appendChild(alertDiv);
 
-    // Auto-remover após 5 segundos
     setTimeout(() => {
       if (alertDiv.parentNode) {
         alertDiv.remove();
@@ -474,17 +446,6 @@ atualizarHeader() {
     }, 5000);
   }
 
-  // Verificar se usuário está logado (para proteção de rotas)
-  // verificarAutenticacao() {
-  //   if (!this.usuarioLogado) {
-  //     this.mostrarMensagem("Faça login para acessar esta página!", "warning");
-  //     this.abrirModalLogin();
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  // Atualizar perfil do usuário
   async atualizarPerfil(dados) {
     try {
       const response = await fetch(
@@ -504,7 +465,6 @@ atualizarHeader() {
       const data = await response.json();
 
       if (data.success) {
-        // Atualizar usuário logado
         this.usuarioLogado = { ...this.usuarioLogado, ...dados };
         localStorage.setItem(
           "usuarioLogado",
@@ -527,10 +487,8 @@ atualizarHeader() {
   }
 }
 
-// Instância global
 const authManager = new AuthManager();
 
-// Funções globais para os modals
 function abrirModalLogin() {
   authManager.abrirModalLogin();
 }
@@ -543,7 +501,6 @@ function mostrarLogin() {
   authManager.mostrarLogin();
 }
 
-// Funções globais para o carrinho
 function adicionarAoCarrinho(produto, quantidade = 1) {
   authManager.adicionarAoCarrinho(produto, quantidade);
 }
@@ -560,9 +517,8 @@ function finalizarCompra() {
   return authManager.finalizarCompra();
 }
 
-// Event Listeners para os forms
+s;
 document.addEventListener("DOMContentLoaded", function () {
-  // Form de Login
   const formLogin = document.getElementById("formLogin");
   if (formLogin) {
     formLogin.addEventListener("submit", async function (e) {
@@ -583,7 +539,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Form de Cadastro
   const formCadastro = document.getElementById("formCadastro");
   if (formCadastro) {
     formCadastro.addEventListener("submit", async function (e) {
@@ -627,10 +582,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Form de Perfil
   const formPerfil = document.getElementById("formPerfil");
   if (formPerfil) {
-    // Carregar dados do perfil
     if (authManager.usuarioLogado) {
       document.getElementById("perfilNome").value =
         authManager.usuarioLogado.nome || "";
@@ -675,14 +628,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Proteção de rotas - verificar autenticação em páginas protegidas
 document.addEventListener("DOMContentLoaded", function () {
   const paginasProtegidas = ["perfil.html", "historico.html", "carrinho.html"];
   const paginaAtual = window.location.pathname.split("/").pop();
 
   if (paginasProtegidas.includes(paginaAtual)) {
     if (!authManager.verificarAutenticacao()) {
-      // Redirecionar para home se não estiver logado
       window.location.href = "index.html";
     }
   }

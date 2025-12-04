@@ -19,9 +19,7 @@
     <header
       class="bg-black d-flex w-100 align-items-center"
       style="height: 58px; padding: 0 23px"
-    >
-      <!-- Header igual às outras páginas -->
-    </header>
+    ></header>
 
     <section class="container my-5">
       <h1 class="text-center mb-5">Histórico de Compras</h1>
@@ -37,9 +35,7 @@
         >
       </div>
 
-      <div id="historico-pedidos" style="display: none">
-        <!-- Pedidos serão carregados aqui -->
-      </div>
+      <div id="historico-pedidos" style="display: none"></div>
     </section>
 
     <script src="/src/scripts/auth.js"></script>
@@ -82,7 +78,9 @@
               <div class="card-body">
                   <h5 class="card-title">Pedido #${pedido.id_compra}</h5>
                   <p class="text-muted mb-2">
-                      Data: ${new Date(pedido.data_compra).toLocaleString("pt-BR")}
+                      Data: ${new Date(pedido.data_compra).toLocaleString(
+                        "pt-BR"
+                      )}
                   </p>
                   <p><strong>Total:</strong> R$ ${total
                     .toFixed(2)
