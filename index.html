@@ -564,7 +564,7 @@
         try {
           console.log("Carregando categorias...");
           const response = await fetch(
-            "http://localhost:8000/api/categorias.php"
+            "https://backend-meteora-production.up.railway.app/categorias.php"
           );
 
           if (!response.ok) {
@@ -593,7 +593,7 @@
         try {
           console.log("Carregando produtos...");
           const response = await fetch(
-            "http://localhost:8000/api/produtos.php"
+            "https://backend-meteora-production.up.railway.app/produtos.php"
           );
 
           if (!response.ok) {

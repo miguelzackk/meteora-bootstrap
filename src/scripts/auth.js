@@ -87,16 +87,19 @@ class AuthManager {
     try {
       console.log("Tentando login com:", email);
 
-      const response = await fetch("http://localhost:8000/api/login.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          senha: senha,
-        }),
-      });
+      const response = await fetch(
+        "https://backend-meteora-production.up.railway.app/login.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            senha: senha,
+          }),
+        }
+      );
 
       console.log("Resposta recebida:", response);
 
@@ -143,19 +146,22 @@ class AuthManager {
     try {
       console.log("Tentando cadastrar:", email);
 
-      const response = await fetch("http://localhost:8000/api/cadastro.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          nome: nome,
-          sobrenome: sobrenome,
-          email: email,
-          senha: senha,
-        }),
-      });
+      const response = await fetch(
+        "https://backend-meteora-production.up.railway.app/cadastro.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            nome: nome,
+            sobrenome: sobrenome,
+            email: email,
+            senha: senha,
+          }),
+        }
+      );
 
       console.log("Resposta recebida:", response);
 
@@ -405,7 +411,7 @@ class AuthManager {
   async atualizarEstoque(idProduto, quantidadeVendida) {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/atualizar-estoque.php`,
+        `https://backend-meteora-production.up.railway.app/atualizar-estoque.php`,
         {
           method: "POST",
           headers: {
@@ -480,7 +486,7 @@ class AuthManager {
   async atualizarPerfil(dados) {
     try {
       const response = await fetch(
-        "http://localhost:8000/api/atualizar-perfil.php",
+        "https://backend-meteora-production.up.railway.app/atualizar-perfil.php",
         {
           method: "POST",
           headers: {
@@ -667,7 +673,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
 // Proteção de rotas - verificar autenticação em páginas protegidas
 document.addEventListener("DOMContentLoaded", function () {
   const paginasProtegidas = ["perfil.html", "historico.html", "carrinho.html"];
@@ -680,4 +685,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
-

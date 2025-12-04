@@ -56,7 +56,7 @@
 
         try {
           const resp = await fetch(
-            `http://localhost:8000/api/listar-historico.php?id_cliente=${usuario.id_cliente}`
+            `https://backend-meteora-production.up.railway.app/listar-historico.php?id_cliente=${usuario.id_cliente}`
           );
           const data = await resp.json();
 

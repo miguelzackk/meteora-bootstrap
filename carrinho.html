@@ -208,7 +208,7 @@
           }
 
           try {
-            const response = await fetch("http://localhost:8000/api/finalizar-compra.php", {
+            const response = await fetch("https://backend-meteora-production.up.railway.app/finalizar-compra.php", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

@@ -170,7 +170,7 @@
           }
 
           const response = await fetch(
-            `http://localhost:8000/api/produto.php?id=${id}`
+            `https://backend-meteora-production.up.railway.app/produto.php?id=${id}`
           );
 
           if (!response.ok) {
@@ -257,7 +257,7 @@
           document.getElementById("quantidade").value
         );
 
-        fetch(`http://localhost:8000/api/produto.php?id=${idProduto}`)
+        fetch(`https://backend-meteora-production.up.railway.app/produto.php?id=${idProduto}`)
           .then((res) => res.json())
           .then((produto) => {
             if (produto.error) {
