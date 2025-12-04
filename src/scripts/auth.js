@@ -215,30 +215,32 @@ class AuthManager {
   }
 
   // Atualizar header
-  atualizarHeader() {
-    const authButtons = document.getElementById("auth-buttons");
-    if (!authButtons) return;
+atualizarHeader() {
+  const authButtons = document.getElementById("auth-buttons");
+  if (!authButtons) return;
 
-    if (this.usuarioLogado) {
-      authButtons.innerHTML = `
-        <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" style="border-radius: 0;">
-            ${this.usuarioLogado.nome}
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
-            <li><a class="dropdown-item" href="historico.html">Histórico</a></li>
-            <li><a class="dropdown-item" href="carrinho.html">Meu Carrinho</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#" onclick="authManager.logout()">Sair</a></li>
-          </ul>
-        </div>
-      `;
-    } else {
-      authButtons.innerHTML =
-        '<button class="btn btn-outline-light" onclick="authManager.abrirModalLogin()" style="border-radius: 0;">Login</button>';
-    }
+  if (this.usuarioLogado) {
+    authButtons.innerHTML = `
+      <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle" type="button" 
+                id="userDropdown" data-bs-toggle="dropdown" 
+                aria-expanded="false" style="border-radius: 0;">
+          ${this.usuarioLogado.nome}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" href="perfil.html">Meu Perfil</a></li>
+          <li><a class="dropdown-item" href="historico.html">Histórico</a></li>
+          <li><a class="dropdown-item" href="carrinho.html">Meu Carrinho</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" onclick="authManager.logout(); return false;">Sair</a></li>
+        </ul>
+      </div>
+    `;
+  } else {
+    authButtons.innerHTML =
+      '<button class="btn btn-outline-light" onclick="authManager.abrirModalLogin()" style="border-radius: 0;">Login</button>';
   }
+}
 
   // Carrinho
   // No auth.js, verifique a função adicionarAoCarrinho

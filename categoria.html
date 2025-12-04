@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Produtos por Categoria</title>
+    <!-- LINKS CSS FALTANDO: -->
+    <link rel="stylesheet" href="/src/styles/reset.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -148,6 +150,7 @@
       </nav>
     </header>
 
+    <!-- ATENÇÃO: Você tem os modais DUPLICADOS! Remova os modais que estão no final da página -->
     <section class="container mt-4">
       <div class="row">
         <div class="col-12">
@@ -174,136 +177,17 @@
         2023 | Projeto fictício sem fins comerciais.
       </p>
     </footer>
-    <!-- Modal Login -->
-    <div class="modal fade" id="modalLogin" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Login</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="formLogin">
-              <div class="mb-3">
-                <label for="loginEmail" class="form-label">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="loginEmail"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="loginSenha" class="form-label">Senha</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="loginSenha"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                class="btn w-100"
-                style="background-color: blueviolet; color: white"
-              >
-                Entrar
-              </button>
-            </form>
-            <div class="text-center mt-3">
-              <a href="#" onclick="mostrarCadastro()"
-                >Não tem conta? Cadastre-se</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Modal Cadastro -->
-    <div class="modal fade" id="modalCadastro" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Criar Conta</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="formCadastro">
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="cadastroNome" class="form-label">Nome</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="cadastroNome"
-                    required
-                  />
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="cadastroSobrenome" class="form-label"
-                    >Sobrenome</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="cadastroSobrenome"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="cadastroEmail" class="form-label">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="cadastroEmail"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="cadastroSenha" class="form-label">Senha</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="cadastroSenha"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="cadastroConfirmarSenha" class="form-label"
-                  >Confirmar Senha</label
-                >
-                <input
-                  type="password"
-                  class="form-control"
-                  id="cadastroConfirmarSenha"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                class="btn w-100"
-                style="background-color: blueviolet; color: white"
-              >
-                Criar Conta
-              </button>
-            </form>
-            <div class="text-center mt-3">
-              <a href="#" onclick="mostrarLogin()">Já tem conta? Faça login</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- SCRIPTS CORRETOS (COPIAR ESTA PARTE EXATAMENTE DO INDEX.HTML) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+
     <script>
       // Função para obter parâmetros da URL
       function getUrlParams() {
@@ -311,11 +195,6 @@
         return {
           categoria: params.get("categoria"),
         };
-      }
-
-      // Função para lidar com erro de imagem
-      function handleImageError(img) {
-        img.src = "https://picsum.photos/400/300?random=" + Math.random();
       }
 
       // Carregar produtos da categoria
@@ -447,11 +326,31 @@
             "</p></div>";
         }
       }
+
       // Inicializar quando a página carregar
       document.addEventListener("DOMContentLoaded", function () {
         carregarProdutosCategoria();
       });
     </script>
+    
+    <!-- ADICIONAR ESTE SCRIPT AQUI (antes do auth.js) -->
+    <script>
+      // Inicializar Bootstrap dropdowns e modais
+      document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar todos os dropdowns
+        var dropdowns = document.querySelectorAll('.dropdown-toggle');
+        dropdowns.forEach(function(dropdown) {
+          new bootstrap.Dropdown(dropdown);
+        });
+        
+        // Inicializar authManager se já existir
+        if (typeof authManager !== 'undefined') {
+          authManager.atualizarHeader();
+        }
+      });
+    </script>
+    
+    <!-- ESSE SCRIPT DEVE SER O ÚLTIMO -->
     <script src="/src/scripts/auth.js"></script>
   </body>
 </html>
