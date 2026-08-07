@@ -95,12 +95,15 @@ class AuthManager {
 
       console.log("Resposta recebida:", response);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       console.log("Dados recebidos:", data);
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || `Erro no cadastro (HTTP ${response.status})`,
+        };
+      }
 
       if (data.success) {
         this.usuarioLogado = data.usuario;
