@@ -52,7 +52,7 @@
 
         try {
           const resp = await fetch(
-            `https://backend-meteora-production.up.railway.app/listar-historico.php?id_cliente=${usuario.id_cliente}`
+            `https://backend-meteora.onrender.com/listar-historico.php?id_cliente=${usuario.id_cliente}`
           );
           const data = await resp.json();
 

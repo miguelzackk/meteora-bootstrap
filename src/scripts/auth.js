@@ -80,7 +80,7 @@ class AuthManager {
       console.log("Tentando login com:", email);
 
       const response = await fetch(
-        "https://backend-meteora-production.up.railway.app/login.php",
+        "https://backend-meteora.onrender.com/login.php",
         {
           method: "POST",
           headers: {
@@ -136,7 +136,7 @@ class AuthManager {
       console.log("Tentando cadastrar:", email);
 
       const response = await fetch(
-        "https://backend-meteora-production.up.railway.app/cadastro.php",
+        "https://backend-meteora.onrender.com/cadastro.php",
         {
           method: "POST",
           headers: {
@@ -389,7 +389,7 @@ class AuthManager {
   async atualizarEstoque(idProduto, quantidadeVendida) {
     try {
       const response = await fetch(
-        `https://backend-meteora-production.up.railway.app/atualizar-estoque.php`,
+        `https://backend-meteora.onrender.com/atualizar-estoque.php`,
         {
           method: "POST",
           headers: {
@@ -449,7 +449,7 @@ class AuthManager {
   async atualizarPerfil(dados) {
     try {
       const response = await fetch(
-        "https://backend-meteora-production.up.railway.app/atualizar-perfil.php",
+        "https://backend-meteora.onrender.com/atualizar-perfil.php",
         {
           method: "POST",
           headers: {

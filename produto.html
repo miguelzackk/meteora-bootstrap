@@ -349,7 +349,7 @@
           }
 
           const response = await fetch(
-            `https://backend-meteora-production.up.railway.app/produto.php?id=${id}`
+            `https://backend-meteora.onrender.com/produto.php?id=${id}`
           );
 
           if (!response.ok) {
@@ -475,7 +475,7 @@
         }
 
         fetch(
-          `https://backend-meteora-production.up.railway.app/produto.php?id=${idProduto}`
+          `https://backend-meteora.onrender.com/produto.php?id=${idProduto}`
         )
           .then((res) => res.json())
           .then((produto) => {
